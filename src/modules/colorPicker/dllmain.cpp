@@ -5,15 +5,15 @@
 #include <common/settings_objects.h>
 #include "trace.h"
 #include <iostream>
+#include <time.h>
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
-HMODULE hMod;
+
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        hMod = hModule;
         Trace::RegisterProvider();
         break;
     case DLL_THREAD_ATTACH:
@@ -83,15 +83,7 @@ public:
     // list.
     virtual const wchar_t** get_events() override
     {
-        static const wchar_t* events[] = { nullptr };
-        // Available events:
-        // - ll_keyboard
-        // - win_hook_event
-        //
-        // static const wchar_t* events[] = { ll_keyboard,
-        //                                   win_hook_event,
-        //                                   nullptr };
-
+        static const wchar_t* events[] = { ll_keyboard, 0 };
         return events;
     }
 
@@ -229,8 +221,35 @@ public:
     virtual void enable()
     {
         m_enabled = true;
+    }
 
-        HINSTANCE hInstance = hMod;
+    // Disable the powertoy
+    virtual void disable()
+    {
+        m_enabled = false;
+    }
+
+    // Returns if the powertoys is enabled
+    virtual bool is_enabled() override
+    {
+        return m_enabled;
+    }
+
+    bool window_enabled = false;
+    HWND hwnd = NULL;
+
+    void wait(int seconds)
+    {
+        clock_t endwait;
+        endwait = clock() + seconds * CLOCKS_PER_SEC;
+        while (clock() < endwait)
+        {
+        }
+    }
+
+    void CWindow()
+    {
+        HINSTANCE hInstance = reinterpret_cast<HINSTANCE>(&__ImageBase);
 
         // Register the window class.
         const wchar_t CLASS_NAME[] = L"Sample Window Class";
@@ -241,9 +260,11 @@ public:
         wc.hInstance = hInstance;
         wc.lpszClassName = CLASS_NAME;
 
+        RegisterClass(&wc);
+
         // Create the window.
 
-        HWND hwnd = CreateWindowEx(
+        hwnd = CreateWindowEx(
             0, // Optional window styles.
             CLASS_NAME, // Window class
             L"Learn to Program Windows", // Window text
@@ -262,53 +283,58 @@ public:
         );
 
         if (hwnd == NULL)
-        {
             return;
-        }
-
-        std::cout << "Before show Window\n";
-
-        ShowWindow(hwnd, SW_SHOWNORMAL);
-
-        std::cout << "After show Window\n";
-
-        // Run the message loop.
-
-        MSG msg = {};
-        while (GetMessage(&msg, NULL, 0, 0))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
-
-    // Disable the powertoy
-    virtual void disable()
-    {
-        m_enabled = false;
-    }
-
-    // Returns if the powertoys is enabled
-    virtual bool is_enabled() override
-    {
-        return m_enabled;
     }
 
     // Handle incoming event, data is event-specific
     virtual intptr_t signal_event(const wchar_t* name, intptr_t data) override
     {
-        if (wcscmp(name, ll_keyboard) == 0)
+        if (m_enabled && wcscmp(name, ll_keyboard) == 0)
         {
             auto& event = *(reinterpret_cast<LowlevelKeyboardEvent*>(data));
-            // Return 1 if the keypress is to be suppressed (not forwarded to Windows),
-            // otherwise return 0.
-            return 0;
-        }
-        else if (wcscmp(name, win_hook_event) == 0)
-        {
-            auto& event = *(reinterpret_cast<WinHookEvent*>(data));
-            // Return value is ignored
-            return 0;
+            if (event.wParam == WM_KEYDOWN ||
+                event.wParam == WM_SYSKEYDOWN ||
+                event.wParam == WM_KEYUP ||
+                event.wParam == WM_SYSKEYUP)
+            {
+                //if (event.lParam->vkCode == 0x41)
+                //{
+                //    int milli_seconds = 1000 * 2;
+
+                //    // Stroing start time
+                //    clock_t start_time = clock();
+
+                //    // looping till required time is not acheived
+                //    while (clock() < start_time + milli_seconds)
+                //        ;
+                //}
+
+                if (event.lParam->vkCode == 0x42 && !window_enabled)
+                {
+                    if (hwnd == NULL)
+                    {
+                        CWindow();
+                    }
+                    ShowWindow(hwnd, SW_SHOW);
+                    window_enabled = true;
+
+                    // Run the message loop.
+                    MSG msg = {};
+                    while (GetMessage(&msg, NULL, 0, 0))
+                    {
+                        TranslateMessage(&msg);
+                        DispatchMessage(&msg);
+                    }
+                    window_enabled = false;
+                    DestroyWindow(hwnd);
+                    hwnd = NULL;
+                }
+                /*if (event.lParam->vkCode == 0x43 && hwnd != NULL && window_enabled)
+                {
+                    CloseWindow(hwnd);
+                    window_enabled = false;
+                }*/
+            }
         }
         return 0;
     }
@@ -411,13 +437,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
-
+    case WM_KEYDOWN:
+        if (wParam == 0x41)
+        {
+            MessageBox(hwnd, L"OpenedWindows", L"Something", MB_OK);
+        }
+        return 0;
     case WM_PAINT: {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
-
         FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
         EndPaint(hwnd, &ps);
     }
         return 0;
