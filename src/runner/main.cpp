@@ -59,7 +59,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
       L"shortcut_guide.dll",
       L"fancyzones.dll",
       L"PowerRenameExt.dll",
-      L"colorPicker.dll"
+      L"new_powertoy.dll"
     };
     for (auto& file : std::filesystem::directory_iterator(L"modules/")) {
       if (file.path().extension() != L".dll")
