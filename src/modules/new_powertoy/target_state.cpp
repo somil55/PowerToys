@@ -34,8 +34,20 @@ void TargetState::exit()
 
 void TargetState::thread_proc()
 {
-    /*while (instance->state != NewPowertoy::State::DESTROYED)
+    while (true)
     {
-        
-    }*/
+        std::unique_lock lock(mutex);
+        if (events.empty())
+        {
+            cv.wait(lock);
+        }
+        if (instance->state == NewPowertoy::State::DESTROYED)
+            return;
+        auto event = next();
+        if (event.vk_code == 0x44)
+        {
+            MessageBox(NULL, L"OpenedWindows", L"Close", MB_OK);
+        }
+        lock.unlock();
+    }
 }

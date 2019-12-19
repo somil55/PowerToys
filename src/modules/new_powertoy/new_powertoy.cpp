@@ -115,9 +115,9 @@ intptr_t NewPowertoy::signal_event(const wchar_t* name, intptr_t data)
             {
                 hide();
             }
-            else
+            else if (event.lParam->vkCode == 0x44 || event.lParam->vkCode == 0x45)
             {
-                //target_state->signal_event(event.lParam->vkCode);
+                target_state->signal_event(event.lParam->vkCode);
             }
         }
     }
@@ -150,11 +150,11 @@ void NewPowertoy::hide()
 
 void NewPowertoy::destroy()
 {
+    state = State::DESTROYED;
     target_state->exit();
     window->destroy();
     target_state.reset(nullptr);
     window.reset(nullptr);
-    state = State::DESTROYED;
 }
 
 // Load the settings file.
