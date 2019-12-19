@@ -2,7 +2,6 @@
 #include "target_state.h"
 #include "new_powertoy.h"
 
-
 TargetState::TargetState() :
     thread(&TargetState::thread_proc, this)
 {
@@ -44,10 +43,18 @@ void TargetState::thread_proc()
         if (instance->state == NewPowertoy::State::DESTROYED)
             return;
         auto event = next();
+        lock.unlock();
         if (event.vk_code == 0x44)
         {
-            MessageBox(NULL, L"OpenedWindows", L"Close", MB_OK);
+            int milli_seconds = 1000 * 4;
+
+            // start time
+            clock_t start_time = clock();
+
+            // looping till required time is not acheived
+            while (clock() < start_time + milli_seconds)
+                ;
+            MessageBox(NULL, L"Opened Message box", L"Close", MB_OK);
         }
-        lock.unlock();
     }
 }
