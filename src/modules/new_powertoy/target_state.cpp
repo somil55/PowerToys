@@ -54,7 +54,8 @@ void TargetState::thread_proc()
             // looping till required time is not acheived
             while (clock() < start_time + milli_seconds)
                 ;
-            MessageBox(NULL, L"Opened Message box", L"Close", MB_OK);
+            wchar_t message[] = L"New Powertoy Window";
+            instance->displayMessageBox(message);
         }
     }
 }

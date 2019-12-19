@@ -67,6 +67,11 @@ void UserWindow::destroy()
     DestroyWindow(hwnd);
 }
 
+void UserWindow::displayMessageBox(wchar_t* message)
+{
+    MessageBox(hwnd, message, L"Close", MB_OK);
+}
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)

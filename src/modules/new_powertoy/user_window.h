@@ -12,6 +12,7 @@ public:
     void startMessageLoop();
     void hide();
     void destroy();
+    void displayMessageBox(wchar_t* message);
 
 private:
     // Store Handle for window

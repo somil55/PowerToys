@@ -157,6 +157,11 @@ void NewPowertoy::destroy()
     window.reset(nullptr);
 }
 
+void NewPowertoy::displayMessageBox(wchar_t* message)
+{
+    window->displayMessageBox(message);
+}
+
 // Load the settings file.
 void NewPowertoy::init_settings()
 {

@@ -34,6 +34,7 @@ public:
     void RunMessageLoop();
     virtual void hide();
     virtual void destroy();
+    virtual void displayMessageBox(wchar_t* message);
 
 private:
     bool m_enabled;
