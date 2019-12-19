@@ -1,16 +1,19 @@
 #include "pch.h"
 #include "target_state.h"
+#include "new_powertoy.h"
 
-TargetState::TargetState() : thread(&TargetState::thread_proc, this)
+
+TargetState::TargetState() :
+    thread(&TargetState::thread_proc, this)
 {
 }
 
 void TargetState::signal_event(unsigned vk_code)
 {
     std::unique_lock lock(mutex);
-    events.push_back({vk_code });
+    events.push_back({ vk_code });
     lock.unlock();
-    cv.notify_one();  
+    cv.notify_one();
 }
 
 KeyEvent TargetState::next()
@@ -20,7 +23,8 @@ KeyEvent TargetState::next()
     return e;
 }
 
-void TargetState::exit() {
+void TargetState::exit()
+{
     std::unique_lock lock(mutex);
     events.clear();
     lock.unlock();
@@ -30,9 +34,8 @@ void TargetState::exit() {
 
 void TargetState::thread_proc()
 {
-    /*while (instance->state != instance->state::H)
+    /*while (instance->state != NewPowertoy::State::DESTROYED)
     {
         
     }*/
 }
-

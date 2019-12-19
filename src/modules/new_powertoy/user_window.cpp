@@ -1,12 +1,13 @@
 #include "pch.h"
+#include <interface/powertoy_module_interface.h>
+#include <interface/lowlevel_keyboard_event_data.h>
+#include <interface/win_hook_event_data.h>
 #include "user_window.h"
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
 UserWindow::UserWindow()
 {
-    state = State::DESTROYED;
-
     HINSTANCE hInstance = reinterpret_cast<HINSTANCE>(&__ImageBase);
 
     // Register the window class.
@@ -44,19 +45,26 @@ UserWindow::UserWindow()
 void UserWindow::show()
 {
     ShowWindow(hwnd, SW_SHOWNORMAL);
-    state = State::SHOWN;
+}
+
+void UserWindow::startMessageLoop()
+{
+    MSG msg = {};
+    while (GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
 }
 
 void UserWindow::hide()
 {
     CloseWindow(hwnd);
-    state = State::HIDDEN;
 }
 
 void UserWindow::destroy()
 {
     DestroyWindow(hwnd);
-    state = State::DESTROYED;
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

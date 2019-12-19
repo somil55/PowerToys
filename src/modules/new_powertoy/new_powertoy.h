@@ -1,17 +1,22 @@
 #pragma once
 #include <iostream>
 #include <interface/powertoy_module_interface.h>
-#include <interface/lowlevel_keyboard_event_data.h>
-#include <interface/win_hook_event_data.h>
-#include "user_window.h"
 
 extern class NewPowertoy* instance;
-
 class TargetState;
+class UserWindow;
 
 class NewPowertoy : public PowertoyModuleIface
 {
 public:
+    enum class State
+    {
+        CREATED,
+        SHOWN,
+        HIDDEN,
+        DESTROYED
+    };
+    State state;
     NewPowertoy();
     virtual const wchar_t* get_name() override;
     virtual const wchar_t** get_events() override;
@@ -23,7 +28,12 @@ public:
     virtual intptr_t signal_event(const wchar_t* name, intptr_t data) override;
     virtual void register_system_menu_helper(PowertoySystemMenuIface* helper) override {}
     virtual void signal_system_menu_action(const wchar_t* name) override {}
-    virtual void destroy() override;
+
+    virtual void create();
+    virtual void show();
+    void RunMessageLoop();
+    virtual void hide();
+    virtual void destroy();
 
 private:
     bool m_enabled;

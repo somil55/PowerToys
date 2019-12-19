@@ -1,7 +1,10 @@
 #include "pch.h"
-#include "target_state.h"
-#include "new_powertoy.h"
+#include <interface/lowlevel_keyboard_event_data.h>
+#include <interface/win_hook_event_data.h>
 #include <common\settings_objects.h>
+#include "new_powertoy.h"
+#include "user_window.h"
+#include "target_state.h"
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
@@ -18,6 +21,7 @@ const static wchar_t* MODULE_DESC = L"New Powertoy";
 NewPowertoy::NewPowertoy()
 {
     m_enabled = false;
+    state = State::DESTROYED;
     init_settings();
 };
 
@@ -68,17 +72,11 @@ void NewPowertoy::set_config(const wchar_t* config)
 void NewPowertoy::enable()
 {
     m_enabled = true;
-    window = std::make_unique<UserWindow>();
-    target_state = std::make_unique<TargetState>();
 }
 
 // Disable the powertoy
 void NewPowertoy::disable()
 {
-    target_state->exit();
-    window->destroy();
-    target_state.reset();
-    window.reset();
     m_enabled = false;
 }
 
@@ -99,25 +97,64 @@ intptr_t NewPowertoy::signal_event(const wchar_t* name, intptr_t data)
             event.wParam == WM_KEYUP ||
             event.wParam == WM_SYSKEYUP)
         {
-            if (event.lParam->vkCode == 0x42)
+            if (event.lParam->vkCode == 0x42 && state != State::SHOWN)
             {
-                window->show();
+                if (state == State::DESTROYED)
+                {
+                    create();
+                    show();
+                    run_message_loop(); // blocks until window is closed
+                    destroy();
+                }
+                else
+                {
+                    show();
+                }
             }
-            else if (event.lParam->vkCode == 0x43)
+            else if (event.lParam->vkCode == 0x43 && state != State::HIDDEN)
             {
-                window->hide();
+                hide();
             }
             else
             {
-                /*target_state->signal_event(event.lParam->vkCode);*/
+                //target_state->signal_event(event.lParam->vkCode);
             }
         }
     }
     return 0;
 }
 
+void NewPowertoy::create()
+{
+    window = std::make_unique<UserWindow>();
+    target_state = std::make_unique<TargetState>();
+    state = state = State::CREATED;
+}
+
+void NewPowertoy::show()
+{
+    window->show();
+    state = State::SHOWN;
+}
+
+void NewPowertoy::RunMessageLoop()
+{
+    window->startMessageLoop();
+}
+
+void NewPowertoy::hide()
+{
+    window->hide();
+    state = state = State::HIDDEN;
+}
+
 void NewPowertoy::destroy()
 {
+    target_state->exit();
+    window->destroy();
+    target_state.reset(nullptr);
+    window.reset(nullptr);
+    state = State::DESTROYED;
 }
 
 // Load the settings file.
