@@ -3,6 +3,7 @@
 #include <interface/lowlevel_keyboard_event_data.h>
 #include <interface/win_hook_event_data.h>
 #include "user_window.h"
+#include "new_powertoy.h"
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
@@ -47,16 +48,6 @@ void UserWindow::show()
     ShowWindow(hwnd, SW_SHOWNORMAL);
 }
 
-void UserWindow::startMessageLoop()
-{
-    MSG msg = {};
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-}
-
 void UserWindow::hide()
 {
     CloseWindow(hwnd);
@@ -77,7 +68,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (uMsg)
     {
     case WM_DESTROY:
-        PostQuitMessage(0);
+        instance->destroy();
         return 0;
     case WM_PAINT: {
         PAINTSTRUCT ps;

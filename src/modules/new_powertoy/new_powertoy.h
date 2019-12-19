@@ -31,7 +31,6 @@ public:
 
     virtual void create();
     virtual void show();
-    void RunMessageLoop();
     virtual void hide();
     virtual void destroy();
     virtual void displayMessageBox(wchar_t* message);

@@ -9,7 +9,6 @@ class UserWindow
 public:
     UserWindow();
     void show();
-    void startMessageLoop();
     void hide();
     void destroy();
     void displayMessageBox(wchar_t* message);

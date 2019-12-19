@@ -102,16 +102,10 @@ intptr_t NewPowertoy::signal_event(const wchar_t* name, intptr_t data)
                 if (state == State::DESTROYED)
                 {
                     create();
-                    show();
-                    run_message_loop(); // blocks until window is closed
-                    destroy();
                 }
-                else
-                {
-                    show();
-                }
+                show();
             }
-            else if (event.lParam->vkCode == 0x43 && state != State::HIDDEN)
+            else if (event.lParam->vkCode == 0x43 && state == State::SHOWN)
             {
                 hide();
             }
@@ -137,11 +131,6 @@ void NewPowertoy::show()
     state = State::SHOWN;
 }
 
-void NewPowertoy::RunMessageLoop()
-{
-    window->startMessageLoop();
-}
-
 void NewPowertoy::hide()
 {
     window->hide();
@@ -152,7 +141,6 @@ void NewPowertoy::destroy()
 {
     state = State::DESTROYED;
     target_state->exit();
-    window->destroy();
     target_state.reset(nullptr);
     window.reset(nullptr);
 }
