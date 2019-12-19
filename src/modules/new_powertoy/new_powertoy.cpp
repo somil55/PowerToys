@@ -141,6 +141,7 @@ void NewPowertoy::destroy()
 {
     state = State::DESTROYED;
     target_state->exit();
+    window->destroy();
     target_state.reset(nullptr);
     window.reset(nullptr);
 }
