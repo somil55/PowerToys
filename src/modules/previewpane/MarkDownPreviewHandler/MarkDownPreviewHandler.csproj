@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HTMLParsingExtension.cs" />
+    <Compile Include="MarkdownPreviewHandler.cs" />
+    <Compile Include="MarkdownPreviewHandlerControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
