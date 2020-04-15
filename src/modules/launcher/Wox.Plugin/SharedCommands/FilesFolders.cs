@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows;
 
 namespace Wox.Plugin.SharedCommands
 {
@@ -17,7 +16,6 @@ namespace Wox.Plugin.SharedCommands
                     "Source directory does not exist or could not be found: "
                     + sourcePath);
             }
-
             try
             {
                 DirectoryInfo[] dirs = dir.GetDirectories();
@@ -44,58 +42,30 @@ namespace Wox.Plugin.SharedCommands
             }
             catch (Exception e)
             {
-#if DEBUG
-                throw e;
-#else
-                MessageBox.Show(string.Format("Copying path {0} has failed, it will now be deleted for consistency", targetPath));
                 RemoveFolder(targetPath);
-#endif
+                throw e;
             }
 
         }
 
         public static bool VerifyBothFolderFilesEqual(this string fromPath, string toPath)
         {
-            try
-            {
-                var fromDir = new DirectoryInfo(fromPath);
-                var toDir = new DirectoryInfo(toPath);
+            var fromDir = new DirectoryInfo(fromPath);
+            var toDir = new DirectoryInfo(toPath);
 
-                if (fromDir.GetFiles("*", SearchOption.AllDirectories).Length != toDir.GetFiles("*", SearchOption.AllDirectories).Length)
-                    return false;
-
-                if (fromDir.GetDirectories("*", SearchOption.AllDirectories).Length != toDir.GetDirectories("*", SearchOption.AllDirectories).Length)
-                    return false;
-
-                return true;
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                throw e;
-#else
-                MessageBox.Show(string.Format("Unable to verify folders and files between {0} and {1}", fromPath, toPath));
+            if (fromDir.GetFiles("*", SearchOption.AllDirectories).Length != toDir.GetFiles("*", SearchOption.AllDirectories).Length)
                 return false;
-#endif
-            }
 
+            if (fromDir.GetDirectories("*", SearchOption.AllDirectories).Length != toDir.GetDirectories("*", SearchOption.AllDirectories).Length)
+                return false;
+
+            return true;
         }
 
         public static void RemoveFolder(this string path)
         {
-            try
-            {
-                if (Directory.Exists(path))
-                    Directory.Delete(path, true);
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                throw e;
-#else
-                MessageBox.Show(string.Format("Not able to delete folder {0}, please go to the location and manually delete it", path));
-#endif
-            }
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
         }
     }
 }
