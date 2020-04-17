@@ -22,6 +22,7 @@ using System.Diagnostics;
 using Wox.Plugin;
 using Windows.UI.Xaml.Input;
 using Windows.System;
+using Windows.UI.Core;
 
 namespace PowerLauncher
 {
@@ -238,6 +239,7 @@ namespace PowerLauncher
             //_launcher.SearchBox.TextChanged += QueryTextBox_TextChanged;
             //_launcher.SearchBox.QuerySubmitted += AutoSuggestBox_QuerySubmitted;
             //_launcher.SearchBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
+
             _viewModel.PropertyChanged += (o, e) =>
             {
                 if (e.PropertyName == nameof(MainViewModel.MainWindowVisibility))
@@ -257,9 +259,25 @@ namespace PowerLauncher
             };
         }
 
+        private bool IsKeyDown(VirtualKey key)
+        {
+            var keyState = CoreWindow.GetForCurrentThread().GetKeyState(key);
+            return (keyState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+        }
+
         private void _launcher_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Down )
+            if (e.Key == VirtualKey.Tab && IsKeyDown(VirtualKey.Shift))
+            {
+                _viewModel.SelectPrevItemCommand.Execute(null);
+                e.Handled = true;
+            }
+            else if (e.Key == VirtualKey.Tab)
+            {
+                _viewModel.SelectNextItemCommand.Execute(null);
+                e.Handled = true;
+            }
+            else if (e.Key == VirtualKey.Down )
             {
                 _viewModel.SelectNextItemCommand.Execute(null);
                 e.Handled = true;
