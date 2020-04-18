@@ -24,8 +24,10 @@
         LocationChanged="OnLocationChanged"
         Deactivated="OnDeactivated"
         Background="Transparent"
-        Visibility="{Binding MainWindowVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-        d:DataContext="{d:DesignInstance vm:MainViewModel}">
+        x:Name="mainWindow"
+        wox:AttachedDependencyProperty.SecurityId="{Binding MainWindowVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}"
+        >
     <Grid Width="720">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -34,10 +36,11 @@
         </Grid.RowDefinitions>
         <xaml:WindowsXamlHost Grid.Row="0" InitialTypeName="PowerLauncher.UI.LauncherControl" ChildChanged="WindowsXamlHostTextBox_ChildChanged" />
         <Border Grid.Row="1" Name="myElement" Background="Transparent" Height="5"/>
-        <xaml:WindowsXamlHost Grid.Row="2" PreviewMouseDown="WindowsXamlHost_PreviewMouseDown" InitialTypeName="PowerLauncher.UI.ResultList" Visibility="{Binding Results.Visbility}" ChildChanged="WindowsXamlHostListView_ChildChanged" />
+        <xaml:WindowsXamlHost Grid.Row="2" PreviewMouseDown="WindowsXamlHost_PreviewMouseDown" InitialTypeName="PowerLauncher.UI.ResultList" ChildChanged="WindowsXamlHostListView_ChildChanged" />
     </Grid> 
     <Window.InputBindings>
         <KeyBinding Key="Escape" Command="{Binding EscCommand}" />
         <KeyBinding Key="Enter" Command="{Binding OpenResultCommand}"></KeyBinding>
     </Window.InputBindings>
+    <!--<StackPanel Width="400" Height="400" Background="Aqua"></StackPanel>-->
 </Window>
