@@ -31,7 +31,7 @@ namespace PowerLauncher
             SetSecurityId(obj, (Visibility)args.NewValue);
             Control control = (Control)obj;
 
-            TimeSpan duration = new TimeSpan(0, 0, 1);
+            TimeSpan duration = TimeSpan.FromMilliseconds(100);
 
             DoubleAnimation fadeInAnimation = new DoubleAnimation()
             { From = 0.0, To = 1.0, Duration = new Duration(duration) };
