@@ -293,6 +293,14 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <Style TargetType="ListView">
+                <Setter Property="ItemContainerTransitions">
+                    <Setter.Value>
+                        <TransitionCollection/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </xaml:XamlApplication>
