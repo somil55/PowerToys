@@ -7,7 +7,6 @@
     mc:Ignorable="d"
     xmlns:ToolkitBehaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     d:DesignHeight="300"
     d:DesignWidth="720">
     <Grid 
@@ -31,21 +30,6 @@
             <ListView.ItemTemplate>
                 <DataTemplate >
                     <Grid Height="72" Width="690" Background="Transparent" RowSpacing="0">
-                        <Interactivity:Interaction.Behaviors>
-                            <Core:DataTriggerBehavior Binding="{Binding IsSelected}" ComparisonCondition="Equal" Value="true" >
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=ShowActionButtons}" MethodName="StartAnimation"/>
-                            </Core:DataTriggerBehavior>
-                            <Core:DataTriggerBehavior Binding="{Binding IsSelected}" ComparisonCondition="Equal" Value="false">
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=HideActionsButtons}" MethodName="StartAnimation"/>
-                            </Core:DataTriggerBehavior>
-                            <Core:EventTriggerBehavior EventName="PointerEntered">
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=ShowActionButtons}" MethodName="StartAnimation"/>
-                                <Core:InvokeCommandAction Command="{Binding LoadContextMenuCommand}"/>
-                            </Core:EventTriggerBehavior>
-                            <Core:EventTriggerBehavior EventName="PointerExited">
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=HideActionsButtons}" MethodName="StartAnimation"/>
-                            </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64" />
                             <ColumnDefinition Width="*" />
@@ -69,10 +53,6 @@
                                     <StackPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
-                            <Interactivity:Interaction.Behaviors>
-                                <ToolkitBehaviors:Fade x:Name="ShowActionButtons" Duration="250" Delay="0" AutomaticallyStart="False" Value="1" />
-                                <ToolkitBehaviors:Fade x:Name="HideActionsButtons" Duration="250" Delay="0" AutomaticallyStart="False" Value="0" />
-                            </Interactivity:Interaction.Behaviors>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Button Command="{Binding Command}" Background="Transparent" Height="42" Width="42" BorderThickness="1" Style="{ThemeResource ButtonRevealStyle}">
