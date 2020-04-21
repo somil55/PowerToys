@@ -27,25 +27,11 @@
             ItemsSource="{Binding Results.Results, Mode=OneWay}"
             SelectionMode="Single"
             SelectedIndex="{Binding Results.SelectedIndex, Mode=TwoWay}"
+            Style="{StaticResource ListViewNoAnimations}"
             >
             <ListView.ItemTemplate>
                 <DataTemplate >
                     <Grid Height="72" Width="690" Background="Transparent" RowSpacing="0">
-                        <Interactivity:Interaction.Behaviors>
-                            <Core:DataTriggerBehavior Binding="{Binding IsSelected}" ComparisonCondition="Equal" Value="true" >
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=ShowActionButtons}" MethodName="StartAnimation"/>
-                            </Core:DataTriggerBehavior>
-                            <Core:DataTriggerBehavior Binding="{Binding IsSelected}" ComparisonCondition="Equal" Value="false">
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=HideActionsButtons}" MethodName="StartAnimation"/>
-                            </Core:DataTriggerBehavior>
-                            <Core:EventTriggerBehavior EventName="PointerEntered">
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=ShowActionButtons}" MethodName="StartAnimation"/>
-                                <Core:InvokeCommandAction Command="{Binding LoadContextMenuCommand}"/>
-                            </Core:EventTriggerBehavior>
-                            <Core:EventTriggerBehavior EventName="PointerExited">
-                                <Core:CallMethodAction TargetObject="{Binding ElementName=HideActionsButtons}" MethodName="StartAnimation"/>
-                            </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="64" />
                             <ColumnDefinition Width="*" />
