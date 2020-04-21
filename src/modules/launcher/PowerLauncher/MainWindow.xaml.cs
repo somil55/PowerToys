@@ -184,6 +184,8 @@ namespace PowerLauncher
                     System.Windows.Media.Color borderColor = System.Windows.Media.Color.FromArgb(uwpBrush.Color.A, uwpBrush.Color.R, uwpBrush.Color.G, uwpBrush.Color.B);
                     this.SearchBoxBorder.BorderBrush = new SolidColorBrush(borderColor);
                     this.ListBoxBorder.BorderBrush = new SolidColorBrush(borderColor);
+                    this.SearchBoxBorder.Background = new SolidColorBrush(borderColor);
+                    this.ListBoxBorder.Background = new SolidColorBrush(borderColor);
                 }
             }
         }
