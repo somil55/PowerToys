@@ -20,7 +20,15 @@
                     <Color x:Key="DropShadowColor">#FF979797</Color>
                     <x:Double x:Key="DropShadowBlurRadius">8</x:Double>
                 </ResourceDictionary>
-
+                
+                <Style x:Key="ListViewNoAnimations" TargetType="ListView">
+                    <Setter Property="ItemContainerTransitions">
+                        <Setter.Value>
+                            <TransitionCollection/>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                
                 <ResourceDictionary x:Key="Default">
                     <SolidColorBrush x:Key="PrimaryTextColor" Color="White"/>
                     <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#484848"/>
