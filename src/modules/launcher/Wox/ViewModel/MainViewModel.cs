@@ -498,6 +498,17 @@ namespace Wox.ViewModel
             }
         }
 
+        public void ColdStartFix()
+        {
+            List<Result> list = new List<Result>();
+            Result r = new Result();
+            r.Title = "hello";
+            list.Add(r);
+            Results.AddResults(list, "0");
+            Results.Clear();
+            MainWindowVisibility = System.Windows.Visibility.Collapsed;     
+        }
+
         /// <summary>
         /// Checks if Wox should ignore any hotkeys
         /// </summary>

@@ -22,6 +22,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Core;
 using System.Windows.Media;
+using Wox.Plugin;
+using System.Collections.Generic;
 
 namespace PowerLauncher
 {
@@ -191,8 +193,7 @@ namespace PowerLauncher
         private void TextBox_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             TextBox tb = (TextBox)sender;
-            tb.Focus(FocusState.Programmatic);
-            _viewModel.MainWindowVisibility = System.Windows.Visibility.Collapsed;
+            tb.Focus(FocusState.Programmatic);              
         }
 
         private UI.ResultList _resultList = null;
@@ -204,8 +205,14 @@ namespace PowerLauncher
             _resultList = (UI.ResultList)host.Child;
             _resultList.DataContext = _viewModel;
             _resultList.Tapped += SuggestionsList_Tapped;
+            _resultList.SuggestionsList.Loaded += SuggestionsList_Loaded;
             _resultList.SuggestionsList.SelectionChanged += SuggestionsList_SelectionChanged;
             _resultList.SuggestionsList.ContainerContentChanging += SuggestionList_UpdateListSize;
+        }
+
+        private void SuggestionsList_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            _viewModel.ColdStartFix();
         }
 
         private bool IsKeyDown(VirtualKey key)
