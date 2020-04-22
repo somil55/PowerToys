@@ -13,13 +13,12 @@ using Wox.Infrastructure.Http;
 using Wox.Infrastructure.Image;
 using Wox.Infrastructure.Logger;
 using Wox.Infrastructure.UserSettings;
-using Wox.Plugin;
 using Wox.ViewModel;
 using Stopwatch = Wox.Infrastructure.Stopwatch;
 
 namespace PowerLauncher
 {
-    
+
 
     public partial class App : IDisposable, ISingleInstanceApp
     {
@@ -88,26 +87,16 @@ namespace PowerLauncher
 
                 RegisterExitEvents();
 
-                //string s = "mail";
-                //var query = QueryBuilder.Build(s.Trim(), PluginManager.NonGlobalPlugins);
-                //var plugins = PluginManager.ValidPluginsForQuery(query);
-                //foreach (PluginPair plugin in plugins)
-                //{
-                //    if (!plugin.Metadata.Disabled)
-                //    {
-                //        var results = PluginManager.QueryForPlugin(plugin, query);
-                //    }
-                //};
-                //Debug.WriteLine("Hello");
+
                 _mainVM.MainWindowVisibility = Visibility.Visible;
                 Log.Info("|App.OnStartup|End Wox startup ----------------------------------------------------  ");
 
 
 
-        //[Conditional("RELEASE")]
-                    // check udpate every 5 hours
+                //[Conditional("RELEASE")]
+                // check udpate every 5 hours
 
-                    // check updates on startup
+                // check updates on startup
             });
         }
 
