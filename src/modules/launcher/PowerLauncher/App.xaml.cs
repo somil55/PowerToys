@@ -18,7 +18,7 @@ using Stopwatch = Wox.Infrastructure.Stopwatch;
 
 namespace PowerLauncher
 {
-
+    
 
     public partial class App : IDisposable, ISingleInstanceApp
     {
@@ -93,10 +93,10 @@ namespace PowerLauncher
 
 
 
-                //[Conditional("RELEASE")]
-                // check udpate every 5 hours
+        //[Conditional("RELEASE")]
+                    // check udpate every 5 hours
 
-                // check updates on startup
+                    // check updates on startup
             });
         }
 
