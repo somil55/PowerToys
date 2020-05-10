@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!--MainWindow-->
-    <system:String x:Key="registerHotkeyFailed">Failed to register hotkey: {0}</system:String>
+    <system:String x:Key="registerHotkeyFailed">PowerLauncher failed to register hotkey: {0}. Please change the hotkey by right-clicking on PowerToys -> Settings -> PowerLauncher.</system:String>
     <system:String x:Key="couldnotStartCmd">Could not start {0}</system:String>
     <system:String x:Key="invalidWoxPluginFileFormat">Invalid Wox plugin file format</system:String>
     <system:String x:Key="setAsTopMostInThisQuery">Set as topmost in this query</system:String>
