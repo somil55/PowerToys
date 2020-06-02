@@ -105,8 +105,7 @@ namespace PowerLauncher
                     _deletePressed = false;
                     _firstDeleteTimer.Start();
                     Activate();
-                    //(this.FindResource("IntroStoryboard") as Storyboard).Begin();
-
+                    (this.FindResource("IntroStoryboard") as Storyboard).Begin();
                     UpdatePosition();
                     SearchBox.QueryTextBox.Focus();
                     _settings.ActivateTimes++;
@@ -150,8 +149,8 @@ namespace PowerLauncher
         {
             if (_settings.HideWhenDeactivated)
             {
-                //(this.FindResource("OutroStoryboard") as Storyboard).Begin();
-                Hide();
+                (this.FindResource("OutroStoryboard") as Storyboard).Begin();
+             //   Hide();
             }              
         }
 
