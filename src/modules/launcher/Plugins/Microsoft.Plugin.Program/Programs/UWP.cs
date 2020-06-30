@@ -302,7 +302,6 @@ namespace Microsoft.Plugin.Program.Programs
                     result.Title = DisplayName;
                     result.TitleHighlightData = StringMatcher.FuzzySearch(query, DisplayName).MatchData;
                 }
-                result.ToolTipText = result.Title + Environment.NewLine + Package.Location;
                 return result;
             }
 

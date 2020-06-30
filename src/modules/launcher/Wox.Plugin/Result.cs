@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
 using System.Windows.Media;
 
 namespace Wox.Plugin
@@ -11,7 +10,6 @@ namespace Wox.Plugin
     {
 
         private string _title;
-        private string _toolTipText;
         private string _pluginDirectory;
         private string _icoPath;
         public string Title { 
@@ -26,21 +24,6 @@ namespace Wox.Plugin
         public string Glyph { get; set; }
 
         public string FontFamily { get; set; }
-
-        public Visibility ToolTipVisibility { get; set; } = Visibility.Collapsed;
-
-        public string ToolTipText
-        {
-            get { return _toolTipText; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    ToolTipVisibility = Visibility.Visible;
-                    _toolTipText = value;
-                }
-            }
-        }
 
         /// <summary>
         /// The text that will get displayed in the Search text box, when this item is selected in the result list.
