@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Wox.Plugin;
 
 namespace PowerLauncher.Storage
 {
     public class History
     {
-        public List<HistoryItem> Items { get; set; } = new List<HistoryItem>();
+        public List<HistoryItem> Items { get; } = new List<HistoryItem>();
 
         private int _maxHistory = 300;
 

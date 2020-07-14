@@ -263,12 +263,18 @@ namespace PowerLauncher.ViewModel
 
         public static void SetFormattedText(DependencyObject textBlock, IList<int> value)
         {
-            textBlock.SetValue(FormattedTextProperty, value);
+            if(textBlock != null)
+            {
+                textBlock.SetValue(FormattedTextProperty, value);
+            }            
         }
 
         public static Inline GetFormattedText(DependencyObject textBlock)
         {
-            return (Inline)textBlock.GetValue(FormattedTextProperty);
+            if (textBlock != null)
+            {
+                return (Inline)textBlock.GetValue(FormattedTextProperty);
+            }
         }
 
         private static void FormattedTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
