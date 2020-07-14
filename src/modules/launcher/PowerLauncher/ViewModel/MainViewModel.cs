@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Wox.Core.Plugin;
 using Wox.Core.Resource;
-using Wox.Helper;
 using Wox.Infrastructure;
 using Wox.Infrastructure.Hotkey;
 using Wox.Infrastructure.Storage;
@@ -19,8 +18,9 @@ using Microsoft.PowerLauncher.Telemetry;
 using Wox.Storage;
 using Microsoft.PowerToys.Telemetry;
 using interop;
+using PowerLauncher.Helper;
 
-namespace Wox.ViewModel
+namespace PowerLauncher.ViewModel
 {
     public class MainViewModel : BaseModel, ISavable, IDisposable
     {

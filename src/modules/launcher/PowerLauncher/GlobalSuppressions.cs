@@ -8,3 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Design", "CA1060:Move pinvokes to native methods class", Justification = "<Pending>", Scope = "type", Target = "~T:PowerLauncher.Helper.WindowsInteropHelper")]
 [assembly: SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "<Pending>", Scope = "member", Target = "~M:PowerLauncher.Helper.SingleInstance`1.Cleanup")]
 [assembly: SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "<Pending>", Scope = "member", Target = "~M:PowerLauncher.Helper.SingleInstance`1.InitializeAsFirstInstance(System.String)~System.Boolean")]
+[assembly: SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "<Pending>", Scope = "member", Target = "~P:PowerLauncher.ViewModel.ResultViewModel.ContextMenuItems")]
+[assembly: SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>", Scope = "member", Target = "~P:PowerLauncher.ViewModel.ResultViewModel.Image")]
+[assembly: SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>", Scope = "member", Target = "~P:PowerLauncher.ViewModel.SettingWindowViewModel.ActivatedTimes")]

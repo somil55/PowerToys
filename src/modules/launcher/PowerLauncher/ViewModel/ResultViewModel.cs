@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PowerLauncher.Helper;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
@@ -10,9 +11,8 @@ using Wox.Infrastructure;
 using Wox.Infrastructure.Image;
 using Wox.Infrastructure.Logger;
 using Wox.Plugin;
-using Wox.Helper;
 
-namespace Wox.ViewModel
+namespace PowerLauncher.ViewModel
 {
     public class ResultViewModel : BaseModel
     {
