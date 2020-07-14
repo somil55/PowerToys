@@ -15,10 +15,10 @@ using Wox.Infrastructure.Storage;
 using Wox.Infrastructure.UserSettings;
 using Wox.Plugin;
 using Microsoft.PowerLauncher.Telemetry;
-using Wox.Storage;
 using Microsoft.PowerToys.Telemetry;
 using interop;
 using PowerLauncher.Helper;
+using PowerLauncher.Storage;
 
 namespace PowerLauncher.ViewModel
 {
