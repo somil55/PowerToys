@@ -26,7 +26,6 @@ namespace PowerLauncher.ViewModel
     {
         #region Private Fields
 
-        private bool _isQueryRunning;
         private Query _lastQuery;
         private static bool _disposed;
         private string _queryTextBeforeLeaveResults;
@@ -412,7 +411,6 @@ namespace PowerLauncher.ViewModel
                 _updateToken = currentCancellationToken;
 
                 ProgressBarVisibility = Visibility.Hidden;
-                _isQueryRunning = true;
                 var query = QueryBuilder.Build(QueryText.Trim(), PluginManager.NonGlobalPlugins);
                 if (query != null)
                 {
@@ -455,7 +453,6 @@ namespace PowerLauncher.ViewModel
 
                         // this should happen once after all queries are done so progress bar should continue
                         // until the end of all querying
-                        _isQueryRunning = false;
                         if (currentUpdateSource == _updateSource)
                         { // update to hidden if this is still the current query
                             ProgressBarVisibility = Visibility.Hidden;
