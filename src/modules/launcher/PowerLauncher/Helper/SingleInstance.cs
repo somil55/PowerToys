@@ -15,7 +15,7 @@ using System.Windows.Threading;
 
 // http://blogs.microsoft.co.il/arik/2010/05/28/wpf-single-instance-application/
 // modified to allow single instance restart
-namespace Wox.Helper 
+namespace PowerLauncher.Helper 
 {
     internal enum WM
     {
@@ -311,7 +311,7 @@ namespace Wox.Helper
 
             if (args == null)
             {
-                args = new string[] { };
+                args = Array.Empty<string>();
             }
 
             return new List<string>(args);
@@ -329,7 +329,7 @@ namespace Wox.Helper
                 while(true)
                 {
                     // Wait for connection to the pipe
-                    await pipeServer.WaitForConnectionAsync();
+                    await pipeServer.WaitForConnectionAsync().ConfigureAwait(false);
                     if (Application.Current != null)
                     {
                         // Do an asynchronous call to ActivateFirstInstance function
@@ -354,7 +354,7 @@ namespace Wox.Helper
             using (NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", channelName, PipeDirection.Out))
             {
                 // Connect to the available pipe
-                await pipeClient.ConnectAsync(0);
+                await pipeClient.ConnectAsync(0).ConfigureAwait(false);
             }
         }
 

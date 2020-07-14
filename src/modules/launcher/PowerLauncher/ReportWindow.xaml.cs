@@ -6,11 +6,11 @@ using System.Text;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
-using Wox.Helper;
 using Wox.Infrastructure;
 using Wox.Infrastructure.Logger;
+using PowerLauncher.Helper;
 
-namespace Wox
+namespace PowerLauncher
 {
     internal partial class ReportWindow
     {

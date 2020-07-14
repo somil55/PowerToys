@@ -8,9 +8,9 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using Point = System.Windows.Point;
 
-namespace Wox.Helper
+namespace PowerLauncher.Helper
 {
-    public class WindowsInteropHelper
+    public static class WindowsInteropHelper
     {
         private const int GWL_STYLE = -16; //WPF's Message code for Title Bar's Style 
         private const int WS_SYSMENU = 0x80000; //WPF's Message code for System Menu
@@ -35,10 +35,10 @@ namespace Wox.Helper
         }
 
         [DllImport("user32.dll")]
-        public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
+        private static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct INPUT
+        private struct INPUT
         {
             public INPUTTYPE type;
             public InputUnion data;
@@ -50,7 +50,7 @@ namespace Wox.Helper
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct InputUnion
+        private struct InputUnion
         {
             [FieldOffset(0)]
             internal MOUSEINPUT mi;
@@ -89,7 +89,7 @@ namespace Wox.Helper
             internal short wParamH;
         }
 
-        public enum INPUTTYPE : uint
+        private enum INPUTTYPE : uint
         {
             INPUT_MOUSE = 0,
             INPUT_KEYBOARD = 1,
@@ -114,11 +114,11 @@ namespace Wox.Helper
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowRect(IntPtr hwnd, out RECT rc);
 
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
-        [DllImport("user32.DLL")]
-        public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+        [DllImport("user32.DLL", CharSet = CharSet.Unicode)]
+        private static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
 
 
         const string WINDOW_CLASS_CONSOLE = "ConsoleWindowClass";
@@ -137,7 +137,7 @@ namespace Wox.Helper
                 if (!(hWnd.Equals(HWND_DESKTOP) || hWnd.Equals(HWND_SHELL)))
                 {
                     StringBuilder sb = new StringBuilder(256);
-                    GetClassName(hWnd, sb, sb.Capacity);
+                    _ = GetClassName(hWnd, sb, sb.Capacity);
                     string windowClass = sb.ToString();
 
                     //for Win+Tab (Flip3D)
@@ -147,7 +147,7 @@ namespace Wox.Helper
                     }
 
                     RECT appBounds;
-                    GetWindowRect(hWnd, out appBounds);
+                    _ = GetWindowRect(hWnd, out appBounds);
 
                     //for console (ConsoleWindowClass), we have to check for negative dimensions
                     if (windowClass == WINDOW_CLASS_CONSOLE)
@@ -184,7 +184,7 @@ namespace Wox.Helper
         public static void DisableControlBox(Window win)
         {
             var hwnd = new WindowInteropHelper(win).Handle;
-            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
+            _ = SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Wox.Helper
 
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        private struct RECT
         {
             public int Left;
             public int Top;
