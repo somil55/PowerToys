@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using Wox.Core.Plugin;
 using Wox.Core.Resource;
-using Wox.Helper;
+using PowerLauncher.Helper;
 using Wox.Infrastructure;
 using Wox.Infrastructure.Image;
 using Wox.Plugin;
-using Wox.ViewModel;
+using PowerLauncher.ViewModel;
 
 namespace Wox
 {
@@ -32,7 +32,10 @@ namespace Wox
             _mainVM = mainVM;
             _alphabet = alphabet;
             _themeManager = themeManager;
-            _themeManager.ThemeChanged += OnThemeChanged;
+            if(_themeManager != null)
+            {
+                _themeManager.ThemeChanged += OnThemeChanged;
+            }
             WebRequest.RegisterPrefix("data", new DataWebRequestFactory());
         }
 
@@ -133,7 +136,7 @@ namespace Wox
         [Obsolete("This will be removed in Wox 1.3")]
         public void PushResults(Query query, PluginMetadata plugin, List<Result> results)
         {
-            results.ForEach(o =>
+            results?.ForEach(o =>
             {
                 o.PluginDirectory = plugin.PluginDirectory;
                 o.PluginID = plugin.ID;

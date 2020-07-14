@@ -81,12 +81,12 @@ namespace PowerLauncher.ViewModel
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        if (_settings.PreviousHotkey != "")
+                        if (!string.IsNullOrEmpty(_settings.PreviousHotkey))
                         {
                             _hotkeyManager.UnregisterHotkey(_hotkeyHandle);
                         }
 
-                        if (_settings.Hotkey != "")
+                        if (!string.IsNullOrEmpty(_settings.Hotkey))
                         {
                             SetHotkey(_settings.Hotkey, OnHotkey);
                         }
@@ -644,6 +644,11 @@ namespace PowerLauncher.ViewModel
         /// </summary>
         public void UpdateResultView(List<Result> list, PluginMetadata metadata, Query originQuery)
         {
+            if (list == null || metadata == null || originQuery == null)
+            {
+                return;
+            }
+                
             foreach (var result in list)
             {
                 if (_topMostRecord.IsTopMost(result))

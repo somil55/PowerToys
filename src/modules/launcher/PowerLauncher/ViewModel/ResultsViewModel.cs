@@ -28,7 +28,7 @@ namespace PowerLauncher.ViewModel
         }
         public ResultsViewModel(Settings settings) : this()
         {
-            _settings = settings ?? throw new ArgumentNullException("settings", "settings can not be null");
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _settings.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(_settings.MaxResultsToShow))
@@ -271,10 +271,12 @@ namespace PowerLauncher.ViewModel
 
         public static Inline GetFormattedText(DependencyObject textBlock)
         {
-            if (textBlock != null)
+            if (textBlock == null)
             {
-                return (Inline)textBlock.GetValue(FormattedTextProperty);
+                throw new ArgumentNullException(nameof(textBlock));
             }
+
+            return (Inline)textBlock.GetValue(FormattedTextProperty);
         }
 
         private static void FormattedTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

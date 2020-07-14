@@ -10,7 +10,7 @@ using Point = System.Windows.Point;
 
 namespace PowerLauncher.Helper
 {
-    public static class WindowsInteropHelper
+    public static partial class WindowsInteropHelper
     {
         private const int GWL_STYLE = -16; //WPF's Message code for Title Bar's Style 
         private const int WS_SYSMENU = 0x80000; //WPF's Message code for System Menu
@@ -35,30 +35,7 @@ namespace PowerLauncher.Helper
         }
 
         [DllImport("user32.dll")]
-        private static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct INPUT
-        {
-            public INPUTTYPE type;
-            public InputUnion data;
-
-            public static int Size
-            {
-                get { return Marshal.SizeOf(typeof(INPUT)); }
-            }
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        private struct InputUnion
-        {
-            [FieldOffset(0)]
-            internal MOUSEINPUT mi;
-            [FieldOffset(0)]
-            internal KEYBDINPUT ki;
-            [FieldOffset(0)]
-            internal HARDWAREINPUT hi;
-        }
+        public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
         [StructLayout(LayoutKind.Sequential)]
         internal struct MOUSEINPUT
@@ -89,11 +66,11 @@ namespace PowerLauncher.Helper
             internal short wParamH;
         }
 
-        private enum INPUTTYPE : uint
+        public enum INPUTTYPE : uint
         {
-            INPUT_MOUSE = 0,
-            INPUT_KEYBOARD = 1,
-            INPUT_HARDWARE = 2,
+            INPUTMOUSE = 0,
+            INPUTKEYBOARD = 1,
+            INPUTHARDWARE = 2,
         }
 
         [DllImport("user32.dll", SetLastError = true)]
