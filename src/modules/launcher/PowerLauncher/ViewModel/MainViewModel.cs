@@ -30,11 +30,11 @@ namespace PowerLauncher.ViewModel
         private static bool _disposed;
         private string _queryTextBeforeLeaveResults;
 
-        private readonly WoxJsonStorage<History> _historyItemsStorage;
+        private readonly WoxJsonStorage<QueryHistory> _historyItemsStorage;
         private readonly WoxJsonStorage<UserSelectedRecord> _userSelectedRecordStorage;
         private readonly WoxJsonStorage<TopMostRecord> _topMostRecordStorage;
         private readonly Settings _settings;
-        private readonly History _history;
+        private readonly QueryHistory _history;
         private readonly UserSelectedRecord _userSelectedRecord;
         private readonly TopMostRecord _topMostRecord;
 
@@ -59,7 +59,7 @@ namespace PowerLauncher.ViewModel
 
             _settings = settings;
 
-            _historyItemsStorage = new WoxJsonStorage<History>();
+            _historyItemsStorage = new WoxJsonStorage<QueryHistory>();
             _userSelectedRecordStorage = new WoxJsonStorage<UserSelectedRecord>();
             _topMostRecordStorage = new WoxJsonStorage<TopMostRecord>();
             _history = _historyItemsStorage.Load();
@@ -756,15 +756,16 @@ namespace PowerLauncher.ViewModel
                         _hotkeyManager.UnregisterHotkey(_hotkeyHandle);
                     }
                     _hotkeyManager.Dispose();
+                    _updateSource.Dispose();
                     _disposed = true;
                 }   
-            }         
+            }
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);        
         }
 
         #endregion

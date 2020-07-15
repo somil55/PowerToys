@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace PowerLauncher.Storage
 {
-    public class History
+    public class QueryHistory
     {
         public List<HistoryItem> Items { get; } = new List<HistoryItem>();
 
@@ -20,14 +19,14 @@ namespace PowerLauncher.Storage
 
             if (Items.Count > 0 && Items.Last().Query == query)
             {
-                Items.Last().ExecutedDateTime = DateTime.Now;
+                Items.Last().ExecutedDateTime = System.DateTime.Now;
             }
             else
             {
                 Items.Add(new HistoryItem
                 {
                     Query = query,
-                    ExecutedDateTime = DateTime.Now
+                    ExecutedDateTime = System.DateTime.Now
                 });
             }
         }

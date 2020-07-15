@@ -35,7 +35,7 @@ namespace PowerLauncher.Helper
         }
 
         [DllImport("user32.dll")]
-        public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
+        public static extern uint SendInput(uint nInputs, InteropInput[] pInputs, int cbSize);
 
         [StructLayout(LayoutKind.Sequential)]
         internal struct MOUSEINPUT
@@ -46,6 +46,18 @@ namespace PowerLauncher.Helper
             internal uint dwFlags;
             internal uint time;
             internal UIntPtr dwExtraInfo;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct InteropInput
+        {
+            public INPUTTYPE type;
+            public InputUnion data;
+
+            public static int Size
+            {
+                get { return Marshal.SizeOf(typeof(InteropInput)); }
+            }
         }
 
         [StructLayout(LayoutKind.Sequential)]
