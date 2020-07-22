@@ -17,7 +17,7 @@ namespace Wox.Core.Plugin
     /// </summary>
     public static class PluginManager
     {
-        private static IEnumerable<PluginPair> _contextMenuPlugins;
+        private static IEnumerable<PluginPair> _contextMenuPlugins = new List<PluginPair>();
 
         /// <summary>
         /// Directories that will hold Wox plugin directory
@@ -292,7 +292,7 @@ namespace Wox.Core.Plugin
         {
             foreach (var plugin in AllPlugins)
             {
-                var disposablePlugin = plugin as IDisposable;
+                var disposablePlugin = plugin.Plugin as IDisposable;
                 disposablePlugin?.Dispose();
             }
         }
