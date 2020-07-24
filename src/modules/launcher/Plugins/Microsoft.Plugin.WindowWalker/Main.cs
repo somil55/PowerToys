@@ -32,7 +32,7 @@ namespace Microsoft.Plugin.WindowWalker
                     return true;
                 }
             }
-            ).ToList();
+            ).Take(10).ToList();
         }
 
         public void Init(PluginInitContext context)

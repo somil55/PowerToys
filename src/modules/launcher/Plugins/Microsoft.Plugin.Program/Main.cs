@@ -87,7 +87,7 @@ namespace Microsoft.Plugin.Program
                 .Select(p => p.Result(query.Search, _context.API));
 
             var result = results1.Concat(results2).Where(r => r != null && r.Score > 0).ToList();
-            return result;
+            return result.Take(10).ToList();
         }
 
         public void Init(PluginInitContext context)

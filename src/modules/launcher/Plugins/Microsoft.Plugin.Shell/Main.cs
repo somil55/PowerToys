@@ -100,7 +100,7 @@ namespace Microsoft.Plugin.Shell
                 {
                     Log.Exception($"|Microsoft.Plugin.Shell.Main.Query|Exception when query for <{query}>", e);
                 }
-                return results;
+                return results.Take(10).ToList();
             }
         }
 

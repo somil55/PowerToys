@@ -150,7 +150,7 @@ namespace Microsoft.Plugin.Indexer
                 });
             }
 
-            return results;
+            return results.Take(10).ToList();
         }
 
         public void Init(PluginInitContext context)

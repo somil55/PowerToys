@@ -74,7 +74,7 @@ namespace Microsoft.Plugin.Folder
                 result.Score += 10;
             }
 
-            return results;
+            return results.Take(10).ToList();
         }
 
         private static bool IsDriveOrSharedFolder(string search)
