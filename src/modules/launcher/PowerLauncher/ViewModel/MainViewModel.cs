@@ -441,20 +441,21 @@ namespace PowerLauncher.ViewModel
                 var queryTimer = new System.Diagnostics.Stopwatch();
                 queryTimer.Start();
 
+                var query = QueryBuilder.Build(QueryText.Trim(), PluginManager.NonGlobalPlugins);
+
                 lock (_updateSourceLock)
                 {
                     _updateSource?.Cancel();
                     _updateSource = currentUpdateSource;
                     _updateToken = currentCancellationToken;
+                    _lastQuery = query;
                 }
 
-                var query = QueryBuilder.Build(QueryText.Trim(), PluginManager.NonGlobalPlugins);
                 if (query != null)
                 {
                     // handle the exclusiveness of plugin using action keyword
                     RemoveOldQueryResults(query);
 
-                    _lastQuery = query;
                     var plugins = PluginManager.ValidPluginsForQuery(query);
                     var parallelOptions = new ParallelOptions { CancellationToken = currentCancellationToken };
                     Parallel.ForEach(plugins, parallelOptions, plugin =>
@@ -489,6 +490,7 @@ namespace PowerLauncher.ViewModel
             {
                 lock (_updateSourceLock)
                 {
+                    _lastQuery = _emptyQuery;
                     _updateSource?.Cancel();
                 }
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -497,7 +499,7 @@ namespace PowerLauncher.ViewModel
                     Results.Clear();
                     Results.Visibility = Visibility.Collapsed;
                 }));
-                _lastQuery = _emptyQuery;
+                Debug.WriteLine("UI : Collapsed");
             }
         }
 
@@ -692,14 +694,19 @@ namespace PowerLauncher.ViewModel
                 }
             }
 
+
             if (originQuery.RawQuery == _lastQuery.RawQuery)
             {
                 Results.AddResults(list, metadata.ID);
             }
 
-            if (Results.Visibility != Visibility.Visible && list.Count > 0)
+            lock (_updateSourceLock)
             {
-                Results.Visibility = Visibility.Visible;
+                if (originQuery.RawQuery == _lastQuery.RawQuery && Results.Visibility != Visibility.Visible && list.Count > 0)
+                {
+                    Results.Visibility = Visibility.Visible;
+                    Debug.WriteLine("UI : Visible");
+                }
             }
         }
 
