@@ -2,15 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace PowerLauncher.Helper
 {
     public class ResultCollection : ObservableCollection<ResultViewModel>
     {
+        private bool _suppressNotification = false;
+
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (!_suppressNotification)
+                base.OnCollectionChanged(e);
+        }
 
         public void RemoveAll(Predicate<ResultViewModel> predicate)
         {
             CheckReentrancy();
+            _suppressNotification = true;
 
             for (int i = Count - 1; i >= 0; i--)
             {
@@ -19,6 +28,9 @@ namespace PowerLauncher.Helper
                     RemoveAt(i);
                 }
             }
+
+            _suppressNotification = false;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         /// <summary>
@@ -31,6 +43,8 @@ namespace PowerLauncher.Helper
             {
                 throw new ArgumentNullException(nameof(newItems));
             }
+
+            _suppressNotification = true;
 
             int newCount = newItems.Count;
             int oldCount = Items.Count;
@@ -50,7 +64,6 @@ namespace PowerLauncher.Helper
                 }
             }
 
-
             if (newCount >= oldCount)
             {
                 for (int i = oldCount; i < newCount; i++)
@@ -65,6 +78,9 @@ namespace PowerLauncher.Helper
                     RemoveAt(i);
                 }
             }
+
+            _suppressNotification = false;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define DEBUG
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,6 +21,8 @@ using PowerLauncher.Storage;
 using Microsoft.PowerToys.Telemetry;
 using interop;
 using System.Globalization;
+using Stopwatch = System.Diagnostics.Stopwatch;
+using System.Collections.Concurrent;
 
 namespace PowerLauncher.ViewModel
 {
@@ -431,7 +434,6 @@ namespace PowerLauncher.ViewModel
 
         private void QueryResults()
         {
-            Thread.Sleep(100);
             if (!string.IsNullOrEmpty(QueryText))
             {
                 var currentUpdateSource = new CancellationTokenSource();
@@ -460,10 +462,16 @@ namespace PowerLauncher.ViewModel
                         if (!plugin.Metadata.Disabled)
                         {
                             var results = PluginManager.QueryForPlugin(plugin, query);
-                            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                UpdateResultView(results, plugin.Metadata, query);
-                            }));
+                            Application.Current.Dispatcher.BeginInvoke(
+                                System.Windows.Threading.DispatcherPriority.ApplicationIdle,
+                                new Action(() =>
+                                {
+                                    Debug.WriteLine("Adding Number of results " + plugin.Metadata.ToString() + " : " + results.Count);
+                                    Stopwatch stopwatch = Stopwatch.StartNew();
+                                    UpdateResultView(results, plugin.Metadata, query);
+                                    stopwatch.Stop();
+                                    Debug.WriteLine("UpdateResultView " + plugin.Metadata.ToString() + " : " + stopwatch.ElapsedMilliseconds);
+                                }));
                         }
                     });
 
