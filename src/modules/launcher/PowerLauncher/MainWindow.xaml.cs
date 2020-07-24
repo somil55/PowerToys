@@ -324,7 +324,7 @@ namespace PowerLauncher
                 {
                     SearchBox.AutoCompleteTextBlock.Text = string.Empty;
                 }
-                Task.Run(() => QueryTask(text));
+                QueryTask(text);
             }
         }
 

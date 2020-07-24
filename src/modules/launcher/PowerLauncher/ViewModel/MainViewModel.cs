@@ -113,7 +113,7 @@ namespace PowerLauncher.ViewModel
                     Task.Run(() =>
                     {
                         PluginManager.UpdatePluginMetadata(e.Results, pair.Metadata, e.Query);
-                        UpdateResultView(e.Results, pair.Metadata, e.Query);
+                        UpdateResultView(e.Results, pair.Metadata, e.Query, _updateSource);
                     }, _updateToken);
                 };
             }
@@ -436,13 +436,11 @@ namespace PowerLauncher.ViewModel
         {
             if (!string.IsNullOrEmpty(QueryText))
             {
-                var currentUpdateSource = new CancellationTokenSource();
-                var currentCancellationToken = currentUpdateSource.Token;
                 var queryTimer = new System.Diagnostics.Stopwatch();
                 queryTimer.Start();
-
                 var query = QueryBuilder.Build(QueryText.Trim(), PluginManager.NonGlobalPlugins);
-
+                var currentUpdateSource = new CancellationTokenSource();
+                var currentCancellationToken = currentUpdateSource.Token;
                 lock (_updateSourceLock)
                 {
                     _updateSource?.Cancel();
@@ -454,52 +452,55 @@ namespace PowerLauncher.ViewModel
                 if (query != null)
                 {
                     // handle the exclusiveness of plugin using action keyword
-                    RemoveOldQueryResults(query);
 
                     var plugins = PluginManager.ValidPluginsForQuery(query);
-                    var parallelOptions = new ParallelOptions { CancellationToken = currentCancellationToken };
-                    Parallel.ForEach(plugins, parallelOptions, plugin =>
-                    {
-                        if (!plugin.Metadata.Disabled)
-                        {
-                            var results = PluginManager.QueryForPlugin(plugin, query);
-                            Application.Current.Dispatcher.BeginInvoke(
-                                System.Windows.Threading.DispatcherPriority.ApplicationIdle,
-                                new Action(() =>
-                                {
-                                    Debug.WriteLine("Adding Number of results " + plugin.Metadata.ToString() + " : " + results.Count);
-                                    Stopwatch stopwatch = Stopwatch.StartNew();
-                                    UpdateResultView(results, plugin.Metadata, query);
-                                    stopwatch.Stop();
-                                    Debug.WriteLine("UpdateResultView " + plugin.Metadata.ToString() + " : " + stopwatch.ElapsedMilliseconds);
-                                }));
-                        }
-                    });
 
-                    queryTimer.Stop();
-                    var queryEvent = new LauncherQueryEvent()
+                    Task.Run(() =>
                     {
-                        QueryTimeMs = queryTimer.ElapsedMilliseconds,
-                        NumResults = Results.Results.Count,
-                        QueryLength = query.RawQuery.Length
-                    };
-                    PowerToysTelemetry.Log.WriteEvent(queryEvent);
+                        Thread.Sleep(50);
+                        RemoveOldQueryResults(query);
+
+                        // so looping will stop once it was cancelled
+                        var parallelOptions = new ParallelOptions { CancellationToken = currentCancellationToken };
+                        try
+                        {
+                            Parallel.ForEach(plugins, parallelOptions, plugin =>
+                            {
+                                if (!plugin.Metadata.Disabled)
+                                {
+                                    var results = PluginManager.QueryForPlugin(plugin, query);
+                                    currentCancellationToken.ThrowIfCancellationRequested();
+                                    UpdateResultView(results, plugin.Metadata, query, currentUpdateSource);
+                                }
+                            });
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // nothing to do here
+                        }
+
+                        queryTimer.Stop();
+                        var queryEvent = new LauncherQueryEvent()
+                        {
+                            QueryTimeMs = queryTimer.ElapsedMilliseconds,
+                            NumResults = Results.Results.Count,
+                            QueryLength = query.RawQuery.Length
+                        };
+                        PowerToysTelemetry.Log.WriteEvent(queryEvent);
+
+                    }, currentCancellationToken);
                 }
             }
             else
             {
                 lock (_updateSourceLock)
                 {
-                    _lastQuery = _emptyQuery;
                     _updateSource?.Cancel();
+                    _lastQuery = _emptyQuery;
                 }
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    Results.SelectedItem = null;
-                    Results.Clear();
-                    Results.Visibility = Visibility.Collapsed;
-                }));
-                Debug.WriteLine("UI : Collapsed");
+                Results.SelectedItem = null;
+                Results.Clear();
+                Results.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -665,7 +666,7 @@ namespace PowerLauncher.ViewModel
         /// <summary>
         /// To avoid deadlock, this method should not called from main thread
         /// </summary>
-        public void UpdateResultView(List<Result> list, PluginMetadata metadata, Query originQuery)
+        public void UpdateResultView(List<Result> list, PluginMetadata metadata, Query originQuery, CancellationTokenSource cts)
         {
             if (list == null)
             {
@@ -694,19 +695,25 @@ namespace PowerLauncher.ViewModel
                 }
             }
 
-
-            if (originQuery.RawQuery == _lastQuery.RawQuery)
-            {
-                Results.AddResults(list, metadata.ID);
-            }
-
-            lock (_updateSourceLock)
-            {
-                if (originQuery.RawQuery == _lastQuery.RawQuery && Results.Visibility != Visibility.Visible && list.Count > 0)
+            Application.Current.Dispatcher.BeginInvoke(
+                System.Windows.Threading.DispatcherPriority.ApplicationIdle,
+                new Action(() =>
                 {
-                    Results.Visibility = Visibility.Visible;
-                    Debug.WriteLine("UI : Visible");
-                }
+                    if (originQuery.RawQuery == _lastQuery.RawQuery)
+                    {
+                        if (!cts.IsCancellationRequested)
+                        {
+                            Results.AddResults(list, metadata.ID);
+                        }
+                    }
+                })
+            );
+
+            Debug.WriteLine("Operation Completed : " + originQuery.RawQuery);
+
+            if (Results.Visibility != Visibility.Visible && list.Count > 0)
+            {
+                Results.Visibility = Visibility.Visible;
             }
         }
 

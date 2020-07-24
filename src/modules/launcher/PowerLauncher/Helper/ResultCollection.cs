@@ -8,29 +8,27 @@ namespace PowerLauncher.Helper
 {
     public class ResultCollection : ObservableCollection<ResultViewModel>
     {
-        private bool _suppressNotification = false;
 
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs _)
         {
-            if (!_suppressNotification)
-                base.OnCollectionChanged(e);
+            //if (!_suppressNotification)
+            //    base.OnCollectionChanged(e);
         }
 
         public void RemoveAll(Predicate<ResultViewModel> predicate)
         {
             CheckReentrancy();
-            _suppressNotification = true;
-
+            List<ResultViewModel> removedItems = new List<ResultViewModel>();
             for (int i = Count - 1; i >= 0; i--)
             {
                 if (predicate(this[i]))
                 {
+                    removedItems.Add(this[i]);
                     RemoveAt(i);
                 }
             }
 
-            _suppressNotification = false;
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItems));
         }
 
         /// <summary>
@@ -44,7 +42,6 @@ namespace PowerLauncher.Helper
                 throw new ArgumentNullException(nameof(newItems));
             }
 
-            _suppressNotification = true;
 
             int newCount = newItems.Count;
             int oldCount = Items.Count;
@@ -79,7 +76,6 @@ namespace PowerLauncher.Helper
                 }
             }
 
-            _suppressNotification = false;
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
