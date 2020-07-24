@@ -41,6 +41,7 @@ namespace PowerLauncher.ViewModel
         private readonly TopMostRecord _topMostRecord;
 
         private CancellationTokenSource _updateSource { get; set; }
+        private readonly object _updateSourceLock = new object();
         private CancellationToken _updateToken;
         private bool _saved;
         private HotkeyManager _hotkeyManager { get; set; }
@@ -430,17 +431,21 @@ namespace PowerLauncher.ViewModel
 
         private void QueryResults()
         {
+            Thread.Sleep(100);
             if (!string.IsNullOrEmpty(QueryText))
             {
+                var currentUpdateSource = new CancellationTokenSource();
+                var currentCancellationToken = currentUpdateSource.Token;
                 var queryTimer = new System.Diagnostics.Stopwatch();
                 queryTimer.Start();
-                _updateSource?.Cancel();
-                var currentUpdateSource = new CancellationTokenSource();
-                _updateSource = currentUpdateSource;
-                var currentCancellationToken = _updateSource.Token;
-                _updateToken = currentCancellationToken;
 
-                ProgressBarVisibility = Visibility.Hidden;
+                lock (_updateSourceLock)
+                {
+                    _updateSource?.Cancel();
+                    _updateSource = currentUpdateSource;
+                    _updateToken = currentCancellationToken;
+                }
+
                 var query = QueryBuilder.Build(QueryText.Trim(), PluginManager.NonGlobalPlugins);
                 if (query != null)
                 {
@@ -449,64 +454,42 @@ namespace PowerLauncher.ViewModel
 
                     _lastQuery = query;
                     var plugins = PluginManager.ValidPluginsForQuery(query);
-
-                    Task.Run(() =>
+                    var parallelOptions = new ParallelOptions { CancellationToken = currentCancellationToken };
+                    Parallel.ForEach(plugins, parallelOptions, plugin =>
                     {
-                        // so looping will stop once it was cancelled
-                        var parallelOptions = new ParallelOptions { CancellationToken = currentCancellationToken };
-                        try
+                        if (!plugin.Metadata.Disabled)
                         {
-                            Parallel.ForEach(plugins, parallelOptions, plugin =>
+                            var results = PluginManager.QueryForPlugin(plugin, query);
+                            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                             {
-                                if (!plugin.Metadata.Disabled)
-                                {
-                                    var results = PluginManager.QueryForPlugin(plugin, query);
-                                    if (Application.Current.Dispatcher.CheckAccess())
-                                    {
-                                        UpdateResultView(results, plugin.Metadata, query);
-                                    }
-                                    else
-                                    {
-                                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                                        {
-                                            UpdateResultView(results, plugin.Metadata, query);
-                                        }));
-                                    }
-                                }
-                            });
+                                UpdateResultView(results, plugin.Metadata, query);
+                            }));
                         }
-                        catch (OperationCanceledException)
-                        {
-                            // nothing to do here
-                        }
+                    });
 
-
-                        // this should happen once after all queries are done so progress bar should continue
-                        // until the end of all querying
-                        if (currentUpdateSource == _updateSource)
-                        { // update to hidden if this is still the current query
-                            ProgressBarVisibility = Visibility.Hidden;
-                        }
-
-                        queryTimer.Stop();
-                        var queryEvent = new LauncherQueryEvent()
-                        {
-                            QueryTimeMs = queryTimer.ElapsedMilliseconds,
-                            NumResults = Results.Results.Count,
-                            QueryLength = query.RawQuery.Length
-                        };
-                        PowerToysTelemetry.Log.WriteEvent(queryEvent);
-
-                    }, currentCancellationToken);
+                    queryTimer.Stop();
+                    var queryEvent = new LauncherQueryEvent()
+                    {
+                        QueryTimeMs = queryTimer.ElapsedMilliseconds,
+                        NumResults = Results.Results.Count,
+                        QueryLength = query.RawQuery.Length
+                    };
+                    PowerToysTelemetry.Log.WriteEvent(queryEvent);
                 }
             }
             else
             {
-                _updateSource?.Cancel();
+                lock (_updateSourceLock)
+                {
+                    _updateSource?.Cancel();
+                }
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    Results.SelectedItem = null;
+                    Results.Clear();
+                    Results.Visibility = Visibility.Collapsed;
+                }));
                 _lastQuery = _emptyQuery;
-                Results.SelectedItem = null;
-                Results.Clear();
-                Results.Visibility = Visibility.Collapsed;
             }
         }
 
