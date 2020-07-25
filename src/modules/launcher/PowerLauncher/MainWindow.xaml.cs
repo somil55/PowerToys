@@ -28,6 +28,7 @@ namespace PowerLauncher
         private bool _isTextSetProgrammatically;
         bool _deletePressed = false;
         Timer _firstDeleteTimer = new Timer();
+        bool _coldStateHotkeyPressed = false;
 
         #endregion
 
@@ -82,6 +83,13 @@ namespace PowerLauncher
             SearchBox.QueryTextBox.DataContext = _viewModel;
             SearchBox.QueryTextBox.PreviewKeyDown += _launcher_KeyDown;
             SearchBox.QueryTextBox.TextChanged += QueryTextBox_TextChanged;
+
+            // Set initial language flow direction
+            SearchBox_UpdateFlowDirection();
+
+            // Register language changed event
+            InputLanguageManager.Current.InputLanguageChanged += SearchBox_InputLanguageChanged;
+
             SearchBox.QueryTextBox.Focus();
 
             ListBox.DataContext = _viewModel;
@@ -371,6 +379,17 @@ namespace PowerLauncher
                 {
                     SearchBox.QueryTextBox.SelectAll();
                 }
+
+                // Log the time taken from pressing the hotkey till launcher is visible as separate events depending on if it's the first hotkey invoke or second
+                if (!_coldStateHotkeyPressed)
+                {
+                    PowerToysTelemetry.Log.WriteEvent(new LauncherColdStateHotkeyEvent() { HotkeyToVisibleTimeMs = _viewModel.GetHotkeyEventTimeMs() });
+                    _coldStateHotkeyPressed = true;
+                }
+                else
+                {
+                    PowerToysTelemetry.Log.WriteEvent(new LauncherWarmStateHotkeyEvent() { HotkeyToVisibleTimeMs = _viewModel.GetHotkeyEventTimeMs() });
+                }
             }
             else
             {
@@ -381,6 +400,17 @@ namespace PowerLauncher
         private void OutroStoryboard_Completed(object sender, EventArgs e)
         {
             Hide();
+        }
+
+        private void SearchBox_UpdateFlowDirection()
+        {
+            SearchBox.QueryTextBox.FlowDirection = MainViewModel.GetLanguageFlowDirection();
+            SearchBox.AutoCompleteTextBlock.FlowDirection = MainViewModel.GetLanguageFlowDirection();
+        }
+
+        private void SearchBox_InputLanguageChanged(object sender, InputLanguageEventArgs e) 
+        {
+            SearchBox_UpdateFlowDirection();
         }
 
         protected virtual void Dispose(bool disposing)
