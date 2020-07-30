@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define DEBUG
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -454,22 +455,44 @@ namespace PowerLauncher.ViewModel
                         try
                         {
                             currentCancellationToken.ThrowIfCancellationRequested();
-                            foreach(PluginPair plugin in plugins)
+
+                            var resultPluginPair = new List<(List<Result>, PluginMetadata)>();
+                            foreach (PluginPair plugin in plugins)
                             {
-                                if (!plugin.Metadata.Disabled && !currentCancellationToken.IsCancellationRequested)
+                                if (!plugin.Metadata.Disabled)
                                 {
                                     var results = PluginManager.QueryForPlugin(plugin, query);
+                                    resultPluginPair.Add((results, plugin.Metadata));
                                     currentCancellationToken.ThrowIfCancellationRequested();
-                                    lock (_addResultsLock)
-                                    {
-                                        UpdateResultView(results, plugin.Metadata, query);
-                                    }
                                 }
+                            }
+
+                            lock (_addResultsLock)
+                            {
+                                System.Diagnostics.Stopwatch stopwatch2 = System.Diagnostics.Stopwatch.StartNew();
+                                RemoveOldQueryResults(query);
+                                foreach (var p in resultPluginPair)
+                                {
+                                    UpdateResultView(p.Item1, p.Item2, query);
+                                    currentCancellationToken.ThrowIfCancellationRequested();
+                                }
+                                currentCancellationToken.ThrowIfCancellationRequested();
+                                Results.Results.Sort(delegate (ResultViewModel c1, ResultViewModel c2) {
+                                    if (c1.Result.Score > c2.Result.Score)
+                                        return -1;
+                                    else if (c1.Result.Score == c2.Result.Score)
+                                        return 0;
+                                    else
+                                        return 1;
+                                });
+                                stopwatch2.Stop();
+                                Debug.WriteLine("ResultsViewModel Update time : " + stopwatch2.ElapsedMilliseconds);
                             }
 
                             currentCancellationToken.ThrowIfCancellationRequested();
                             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                             {
+                                Debug.WriteLine("Reached here ");
                                 if (query.RawQuery == _lastQuery.RawQuery)
                                 {
                                     Results.Results.NotifyChanges();
@@ -509,7 +532,7 @@ namespace PowerLauncher.ViewModel
                 _lastQuery = _emptyQuery;
                 Results.SelectedItem = null;
                 Results.Visibility = Visibility.Hidden;
-                Results.Clear();
+                //Results.Clear();
             }
         }
 

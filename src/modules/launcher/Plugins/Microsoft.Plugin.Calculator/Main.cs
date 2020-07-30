@@ -30,75 +30,94 @@ namespace Microsoft.Plugin.Calculator
 
         public List<Result> Query(Query query)
         {
-            if(query == null)
+            //            if(query == null)
+            //            {
+            //                throw new ArgumentNullException(paramName: nameof(query));
+            //            }
+
+            //            if (query.Search.Length <= 2          // don't affect when user only input "e" or "i" keyword
+            //                || !RegValidExpressChar.IsMatch(query.Search)
+            //                || !IsBracketComplete(query.Search)) return new List<Result>();
+
+            //            try
+            //            {
+            //                var result = MagesEngine.Interpret(query.Search);
+
+            //                // This could happen for some incorrect queries, like pi(2) 
+            //                if (result == null)
+            //                {
+            //                    return new List<Result>();
+            //                }
+
+            //                if (result.ToString() == "NaN")
+            //                    result = Context.API.GetTranslation("wox_plugin_calculator_not_a_number");
+
+            //                if (result is Function)
+            //                    result = Context.API.GetTranslation("wox_plugin_calculator_expression_not_complete");
+
+
+            //                if (!string.IsNullOrEmpty(result?.ToString()))
+            //                {
+            //                    return new List<Result>
+            //                    {
+            //                        new Result
+            //                        {
+            //                            Title = result.ToString(),
+            //                            IcoPath = IconPath,
+            //                            Score = 300,
+            //                            SubTitle = Context.API.GetTranslation("wox_plugin_calculator_copy_number_to_clipboard"),
+            //                            Action = c =>
+            //                            {
+            //                                var ret = false;
+            //                                var thread = new Thread(() =>
+            //                                {
+            //                                    try
+            //                                    {
+            //                                        Clipboard.SetText(result.ToString());
+            //                                        ret = true;
+            //                                    }
+            //                                    catch (ExternalException)
+            //                                    {
+            //                                        MessageBox.Show("Copy failed, please try later");
+            //                                    }
+            //                                });
+            //                                thread.SetApartmentState(ApartmentState.STA);
+            //                                thread.Start();
+            //                                thread.Join();
+            //                                return ret;
+            //                            }
+            //                        }
+            //                    };
+            //                }
+            //            }
+            ////We want to keep the process alive if any the mages library throws any exceptions.
+            //#pragma warning disable CA1031 // Do not catch general exception types
+            //            catch(Exception e)
+            //#pragma warning restore CA1031 // Do not catch general exception types
+            //            {
+            //                Log.Exception($"|Microsoft.Plugin.Calculator.Main.Query|Exception when query for <{query}>", e);
+            //            }
+
+            if (query == null)
             {
                 throw new ArgumentNullException(paramName: nameof(query));
             }
 
-            if (query.Search.Length <= 2          // don't affect when user only input "e" or "i" keyword
-                || !RegValidExpressChar.IsMatch(query.Search)
-                || !IsBracketComplete(query.Search)) return new List<Result>();
-
-            try
+            var results = new List<Result>();
+            for (int i = 0; i < 80000; i++)
             {
-                var result = MagesEngine.Interpret(query.Search);
-
-                // This could happen for some incorrect queries, like pi(2) 
-                if (result == null)
-                {
-                    return new List<Result>();
-                }
-
-                if (result.ToString() == "NaN")
-                    result = Context.API.GetTranslation("wox_plugin_calculator_not_a_number");
-
-                if (result is Function)
-                    result = Context.API.GetTranslation("wox_plugin_calculator_expression_not_complete");
-
-
-                if (!string.IsNullOrEmpty(result?.ToString()))
-                {
-                    return new List<Result>
-                    {
+                results.Add(
                         new Result
                         {
-                            Title = result.ToString(),
+                            Title = i.ToString(),
                             IcoPath = IconPath,
                             Score = 300,
-                            SubTitle = Context.API.GetTranslation("wox_plugin_calculator_copy_number_to_clipboard"),
-                            Action = c =>
-                            {
-                                var ret = false;
-                                var thread = new Thread(() =>
-                                {
-                                    try
-                                    {
-                                        Clipboard.SetText(result.ToString());
-                                        ret = true;
-                                    }
-                                    catch (ExternalException)
-                                    {
-                                        MessageBox.Show("Copy failed, please try later");
-                                    }
-                                });
-                                thread.SetApartmentState(ApartmentState.STA);
-                                thread.Start();
-                                thread.Join();
-                                return ret;
-                            }
+                            SubTitle = Context.API.GetTranslation("wox_plugin_calculator_copy_number_to_clipboard")
                         }
-                    };
-                }
-            }
-//We want to keep the process alive if any the mages library throws any exceptions.
-#pragma warning disable CA1031 // Do not catch general exception types
-            catch(Exception e)
-#pragma warning restore CA1031 // Do not catch general exception types
-            {
-                Log.Exception($"|Microsoft.Plugin.Calculator.Main.Query|Exception when query for <{query}>", e);
+                    );
             }
 
-            return new List<Result>();
+            return results;
         }
 
         private bool IsBracketComplete(string query)

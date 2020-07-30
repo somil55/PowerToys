@@ -1,6 +1,8 @@
-﻿using PowerLauncher.Helper;
+﻿#define DEBUG
+using PowerLauncher.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -153,12 +155,12 @@ namespace PowerLauncher.ViewModel
 
         public void RemoveResultsExcept(PluginMetadata metadata)
         {
-            Results.RemovePredicate(r => r.Result.PluginID != metadata.ID);
+            Results.RemoveAll(r => r.Result.PluginID != metadata.ID);
         }
 
         public void RemoveResultsFor(PluginMetadata metadata)
         {
-            Results.RemovePredicate(r => r.Result.PluginID == metadata.ID);
+            Results.RemoveAll(r => r.Result.PluginID == metadata.ID);
         }
 
         public void SelectNextTabItem()
@@ -217,55 +219,9 @@ namespace PowerLauncher.ViewModel
         /// </summary>
         public void AddResults(List<Result> newRawResults, string resultId)
         {
-            var newResults = NewResults(newRawResults, resultId);
-            Results.Update(newResults);
-        }
-
-        private List<ResultViewModel> NewResults(List<Result> newRawResults, string resultId)
-        {
-            var results = Results.ToList();
+            Results.RemoveAll(r => r.Result.PluginID == resultId);
             var newResults = newRawResults.Select(r => new ResultViewModel(r)).ToList();
-            var oldResults = results.Where(r => r.Result.PluginID == resultId).ToList();
-
-            // Find the same results in A (old results) and B (new newResults)          
-            var sameResults = oldResults
-                                .Where(t1 => newResults.Any(x => x.Result.Equals(t1.Result)))
-                                .ToList();
-
-            // remove result of relative complement of B in A
-            foreach (var result in oldResults.Except(sameResults))
-            {
-                results.Remove(result);
-            }
-
-            // update result with B's score and index position
-            foreach (var sameResult in sameResults)
-            {
-                int oldIndex = results.IndexOf(sameResult);
-                int oldScore = results[oldIndex].Result.Score;
-                var newResult = newResults[newResults.IndexOf(sameResult)];
-                int newScore = newResult.Result.Score;
-                if (newScore != oldScore)
-                {
-                    var oldResult = results[oldIndex];
-
-                    oldResult.Result.Score = newScore;
-                    oldResult.Result.OriginQuery = newResult.Result.OriginQuery;
-
-                    results.RemoveAt(oldIndex);
-                    int newIndex = InsertIndexOf(newScore, results);
-                    results.Insert(newIndex, oldResult);
-                }
-            }
-
-            // insert result in relative complement of A in B
-            foreach (var result in newResults.Except(sameResults))
-            {
-                int newIndex = InsertIndexOf(result.Result.Score, results);
-                results.Insert(newIndex, result);
-            }
-
-            return results;
+            Results.AddRange(newResults);
         }
         #endregion
 
