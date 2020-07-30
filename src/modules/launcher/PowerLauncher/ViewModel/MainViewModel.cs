@@ -481,7 +481,6 @@ namespace PowerLauncher.ViewModel
                             currentCancellationToken.ThrowIfCancellationRequested();
                             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                             {
-                                Debug.WriteLine("Reached here ");
                                 if (query.RawQuery == _lastQuery.RawQuery)
                                 {
                                     Results.Results.NotifyChanges();
@@ -521,7 +520,7 @@ namespace PowerLauncher.ViewModel
                 _lastQuery = _emptyQuery;
                 Results.SelectedItem = null;
                 Results.Visibility = Visibility.Hidden;
-                //Results.Clear();
+                Results.Clear();
             }
         }
 

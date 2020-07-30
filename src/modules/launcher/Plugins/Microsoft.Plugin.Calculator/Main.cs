@@ -30,7 +30,7 @@ namespace Microsoft.Plugin.Calculator
 
         public List<Result> Query(Query query)
         {
-            if (query == null)
+            if(query == null)
             {
                 throw new ArgumentNullException(paramName: nameof(query));
             }
@@ -90,9 +90,9 @@ namespace Microsoft.Plugin.Calculator
                     };
                 }
             }
-            //We want to keep the process alive if any the mages library throws any exceptions.
+//We want to keep the process alive if any the mages library throws any exceptions.
 #pragma warning disable CA1031 // Do not catch general exception types
-            catch (Exception e)
+            catch(Exception e)
 #pragma warning restore CA1031 // Do not catch general exception types
             {
                 Log.Exception($"|Microsoft.Plugin.Calculator.Main.Query|Exception when query for <{query}>", e);
@@ -122,7 +122,7 @@ namespace Microsoft.Plugin.Calculator
 
         public void Init(PluginInitContext context)
         {
-            if (context == null)
+            if(context == null)
             {
                 throw new ArgumentNullException(paramName: nameof(context));
             }
