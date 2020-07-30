@@ -1,5 +1,4 @@
-﻿#define DEBUG
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -112,7 +111,7 @@ namespace PowerLauncher.ViewModel
                     Task.Run(() =>
                     {
                         PluginManager.UpdatePluginMetadata(e.Results, pair.Metadata, e.Query);
-                        UpdateResultView(e.Results, pair.Metadata, e.Query);
+                        UpdateResultView(e.Results, pair.Metadata, e.Query, _updateToken);
                     }, _updateToken);
                 };
             }
@@ -422,11 +421,11 @@ namespace PowerLauncher.ViewModel
                     r => StringMatcher.FuzzySearch(query, r.Title).IsSearchPrecisionScoreMet() ||
                          StringMatcher.FuzzySearch(query, r.SubTitle).IsSearchPrecisionScoreMet()
                 ).ToList();
-                History.AddResults(filtered, id);
+                History.AddResults(filtered, id, _updateToken);
             }
             else
             {
-                History.AddResults(results, id);
+                History.AddResults(results, id, _updateToken);
             }
         }
 
@@ -449,7 +448,6 @@ namespace PowerLauncher.ViewModel
                     Task.Run(() =>
                     {
                         Thread.Sleep(20);
-                        RemoveOldQueryResults(query);
                         var plugins = PluginManager.ValidPluginsForQuery(query);
 
                         try
@@ -469,24 +467,15 @@ namespace PowerLauncher.ViewModel
 
                             lock (_addResultsLock)
                             {
-                                System.Diagnostics.Stopwatch stopwatch2 = System.Diagnostics.Stopwatch.StartNew();
                                 RemoveOldQueryResults(query);
                                 foreach (var p in resultPluginPair)
                                 {
-                                    UpdateResultView(p.Item1, p.Item2, query);
+                                    UpdateResultView(p.Item1, p.Item2, query, currentCancellationToken);
                                     currentCancellationToken.ThrowIfCancellationRequested();
                                 }
+
                                 currentCancellationToken.ThrowIfCancellationRequested();
-                                Results.Results.Sort(delegate (ResultViewModel c1, ResultViewModel c2) {
-                                    if (c1.Result.Score > c2.Result.Score)
-                                        return -1;
-                                    else if (c1.Result.Score == c2.Result.Score)
-                                        return 0;
-                                    else
-                                        return 1;
-                                });
-                                stopwatch2.Stop();
-                                Debug.WriteLine("ResultsViewModel Update time : " + stopwatch2.ElapsedMilliseconds);
+                                Results.Results.Sort();
                             }
 
                             currentCancellationToken.ThrowIfCancellationRequested();
@@ -703,7 +692,7 @@ namespace PowerLauncher.ViewModel
         /// <summary>
         /// To avoid deadlock, this method should not called from main thread
         /// </summary>
-        public void UpdateResultView(List<Result> list, PluginMetadata metadata, Query originQuery)
+        public void UpdateResultView(List<Result> list, PluginMetadata metadata, Query originQuery, CancellationToken ct)
         {
             if (list == null)
             {
@@ -734,7 +723,8 @@ namespace PowerLauncher.ViewModel
 
             if (originQuery.RawQuery == _lastQuery.RawQuery)
             {
-                Results.AddResults(list, metadata.ID);
+                ct.ThrowIfCancellationRequested();
+                Results.AddResults(list, metadata.ID, ct);
             }
         }
 
@@ -747,7 +737,7 @@ namespace PowerLauncher.ViewModel
                 Title = "hello"
             };
             list.Add(r);
-            Results.AddResults(list, "0");
+            Results.AddResults(list, "0", _updateToken);
             Results.Clear();
             MainWindowVisibility = System.Windows.Visibility.Collapsed;
 

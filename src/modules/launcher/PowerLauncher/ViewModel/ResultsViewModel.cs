@@ -1,9 +1,7 @@
-﻿#define DEBUG
-using PowerLauncher.Helper;
+﻿using PowerLauncher.Helper;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -217,10 +215,21 @@ namespace PowerLauncher.ViewModel
         /// <summary>
         /// Add new results to ResultCollection
         /// </summary>
-        public void AddResults(List<Result> newRawResults, string resultId)
+        public void AddResults(List<Result> newRawResults, string resultId, CancellationToken ct)
         {
+            if (newRawResults == null)
+            {
+                throw new ArgumentNullException(nameof(newRawResults));
+            }
+
+            List<ResultViewModel> newResults = new List<ResultViewModel>(newRawResults.Count);
+            foreach(Result r in newRawResults)
+            {
+                newResults.Add(new ResultViewModel(r));
+                ct.ThrowIfCancellationRequested();
+            }
+
             Results.RemoveAll(r => r.Result.PluginID == resultId);
-            var newResults = newRawResults.Select(r => new ResultViewModel(r)).ToList();
             Results.AddRange(newResults);
         }
         #endregion
