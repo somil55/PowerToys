@@ -30,9 +30,9 @@ namespace Microsoft.Plugin.Program
 
         private readonly PluginJsonStorage<Settings> _settingsStorage;
         private bool _disposed = false;
-        private PackageRepository _packageRepository = new PackageRepository(new PackageCatalogWrapper(), new BinaryStorage<IList<UWP.Application>>("UWP"));
+        internal PackageRepository _packageRepository = new PackageRepository(new PackageCatalogWrapper(), new BinaryStorage<IList<UWP.Application>>("UWP"));
         private static Win32ProgramFileSystemWatchers _win32ProgramRepositoryHelper;
-        private static Win32ProgramRepository _win32ProgramRepository;
+        internal Win32ProgramRepository _win32ProgramRepository;
 
         public Main()
         {

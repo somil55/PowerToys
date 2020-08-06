@@ -263,7 +263,7 @@ namespace Microsoft.Plugin.Program.Programs
                 return api.GetTranslation("powertoys_run_plugin_program_packaged_application");
             }
 
-            public Result Result(string query, IPublicAPI api)
+            public virtual Result Result(string query, IPublicAPI api)
             {
                 var score = Score(query);
                 if (score <= 0)

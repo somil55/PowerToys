@@ -145,7 +145,7 @@ namespace Microsoft.Plugin.Program.Programs
             return true;
         }
 
-        public Result Result(string query, IPublicAPI api)
+        public virtual Result Result(string query, IPublicAPI api)
         {
             var score = Score(query);
             if (score <= 0)
