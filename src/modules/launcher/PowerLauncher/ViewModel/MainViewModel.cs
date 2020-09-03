@@ -6,12 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using interop;
 using Microsoft.PowerLauncher.Telemetry;
 using Microsoft.PowerToys.Telemetry;
@@ -261,6 +263,11 @@ namespace PowerLauncher.ViewModel
                     OnPropertyChanged(nameof(SystemQueryText));
                 }
             });
+
+            CaptureScreen = new RelayCommand(_ =>
+            {
+                Screenshot();
+            });
         }
 
         public Brush MainWindowBackground { get; set; }
@@ -394,6 +401,8 @@ namespace PowerLauncher.ViewModel
         public ICommand OpenResultCommand { get; set; }
 
         public ICommand ClearQueryCommand { get; set; }
+
+        public ICommand CaptureScreen { get; set; }
 
         public void Query()
         {
@@ -915,6 +924,30 @@ namespace PowerLauncher.ViewModel
             // Reset the stopwatch and return the time elapsed
             _hotkeyTimer.Reset();
             return recordedTime;
+        }
+
+        private static void Screenshot()
+        {
+            var screen = System.Windows.Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(screen);
+
+            RenderTargetBitmap renderTarget = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, 96, 96, PixelFormats.Pbgra32);
+
+            DrawingVisual visual = new DrawingVisual();
+
+            using (DrawingContext context = visual.RenderOpen())
+            {
+                VisualBrush visualBrush = new VisualBrush(screen);
+                context.DrawRectangle(visualBrush, null, new Rect(new Point(0, 0), bounds.Size));
+            }
+
+            renderTarget.Render(visual);
+            PngBitmapEncoder bitmapEncoder = new PngBitmapEncoder();
+            bitmapEncoder.Frames.Add(BitmapFrame.Create(renderTarget));
+            using (Stream stm = File.Create("C:\\Users\\divyan\\Documents\\ScreenShot.png"))
+            {
+                bitmapEncoder.Save(stm);
+            }
         }
     }
 }
