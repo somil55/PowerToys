@@ -867,7 +867,7 @@
       
       <!-- Calculator Plugin -->
       <Component Id="calculatorComponent" Directory="CalculatorPluginFolder" Guid="19DE1022-583C-4969-9AFC-D43CB944003D">
-        <?foreach File in plugin.json;Wox.Infrastructure.dll;Microsoft.Plugin.Calculator.deps.json;Microsoft.Plugin.Calculator.dll;Wox.Plugin.dll;Telemetry.dll?>
+        <?foreach File in ControlzEx.dll;JetBrains.Annotations.dll;Mages.Core.dll;MahApps.Metro.dll;Microsoft.Extensions.Configuration.Abstractions.dll;Microsoft.Extensions.Configuration.Binder.dll;Microsoft.Extensions.Configuration.dll;Microsoft.Extensions.DependencyInjection.Abstractions.dll;Microsoft.Extensions.DependencyInjection.dll;Microsoft.Extensions.Logging.Abstractions.dll;Microsoft.Extensions.Logging.dll;Microsoft.Extensions.Options.dll;Microsoft.Extensions.Primitives.dll;Microsoft.Plugin.Calculator.deps.json;Microsoft.Plugin.Calculator.dll;Microsoft.PowerToys.Settings.UI.Lib.dll;Microsoft.Xaml.Behaviors.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;Mono.Cecil.Pdb.dll;Mono.Cecil.Rocks.dll;Newtonsoft.Json.dll;NLog.dll;NLog.Extensions.Logging.dll;Pinyin4Net.dll;plugin.json;PowerToysInterop.dll;System.Text.Json.dll;Telemetry.dll;Wox.Infrastructure.dll;Wox.Plugin.dll?>
           <File Id="Calculator_$(var.File)" Source="$(var.BinX64Dir)modules\launcher\Plugins\Microsoft.Plugin.Calculator\$(var.File)" />
         <?endforeach?>
       </Component>
@@ -883,7 +883,7 @@
 
       <!-- Folder Plugin -->
       <Component Id="FolderComponent" Directory="FolderPluginFolder" Guid="453D6C29-8F0D-46EC-B210-82E6AF547039">
-        <?foreach File in plugin.json;Wox.Infrastructure.dll;Microsoft.Plugin.Folder.deps.json;Microsoft.Plugin.Folder.dll;Wox.Plugin.dll;Telemetry.dll?>
+        <?foreach File in ControlzEx.dll;JetBrains.Annotations.dll;MahApps.Metro.dll;Microsoft.Extensions.Configuration.Abstractions.dll;Microsoft.Extensions.Configuration.Binder.dll;Microsoft.Extensions.Configuration.dll;Microsoft.Extensions.DependencyInjection.Abstractions.dll;Microsoft.Extensions.DependencyInjection.dll;Microsoft.Extensions.Logging.Abstractions.dll;Microsoft.Extensions.Logging.dll;Microsoft.Extensions.Options.dll;Microsoft.Extensions.Primitives.dll;Microsoft.Plugin.Folder.deps.json;Microsoft.Plugin.Folder.dll;Microsoft.PowerToys.Settings.UI.Lib.dll;Microsoft.Xaml.Behaviors.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;Mono.Cecil.Pdb.dll;Mono.Cecil.Rocks.dll;Newtonsoft.Json.dll;NLog.dll;NLog.Extensions.Logging.dll;Pinyin4Net.dll;plugin.json;PowerToysInterop.dll;System.Text.Json.dll;Telemetry.dll;Wox.Infrastructure.dll;Wox.Plugin.dll?>
         <File Id="Folder_$(var.File)" Source="$(var.BinX64Dir)modules\launcher\Plugins\Microsoft.Plugin.Folder\$(var.File)" />
         <?endforeach?>
       </Component>
@@ -900,7 +900,7 @@
     
       <!-- Program Plugin -->
       <Component Id="ProgramComponent" Directory="ProgramPluginFolder" Guid="3C5CA6E6-3D36-4F4E-B40E-38AA5E5CB799">
-        <?foreach File in plugin.json;Wox.Infrastructure.dll;Wox.Plugin.dll;Microsoft.Plugin.Program.deps.json;Microsoft.Plugin.Program.dll;Telemetry.dll?>
+        <?foreach File in ControlzEx.dll;JetBrains.Annotations.dll;MahApps.Metro.dll;Microsoft.Extensions.Configuration.Abstractions.dll;Microsoft.Extensions.Configuration.Binder.dll;Microsoft.Extensions.Configuration.dll;Microsoft.Extensions.DependencyInjection.Abstractions.dll;Microsoft.Extensions.DependencyInjection.dll;Microsoft.Extensions.Logging.Abstractions.dll;Microsoft.Extensions.Logging.dll;Microsoft.Extensions.Options.dll;Microsoft.Extensions.Primitives.dll;Microsoft.Plugin.Program.deps.json;Microsoft.Plugin.Program.dll;Microsoft.PowerToys.Settings.UI.Lib.dll;Microsoft.Xaml.Behaviors.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;Mono.Cecil.Pdb.dll;Mono.Cecil.Rocks.dll;Newtonsoft.Json.dll;NLog.dll;NLog.Extensions.Logging.dll;Pinyin4Net.dll;plugin.json;PowerToysInterop.dll;System.Text.Json.dll;Telemetry.dll;Wox.Infrastructure.dll;Wox.Plugin.dll?>
           <File Id="Program_$(var.File)" Source="$(var.BinX64Dir)modules\launcher\Plugins\Microsoft.Plugin.Program\$(var.File)" />
         <?endforeach?>
       </Component>
@@ -917,7 +917,7 @@
     
       <!-- Shell Plugin -->
       <Component Id="ShellComponent" Directory="ShellPluginFolder" Guid="6D3D7294-1804-47C9-83E5-47A8867F3801">
-        <?foreach File in plugin.json;Wox.Infrastructure.dll;Wox.Plugin.dll;Microsoft.Plugin.Shell.deps.json;Microsoft.Plugin.Shell.dll;Telemetry.dll?>
+        <?foreach File in ControlzEx.dll;JetBrains.Annotations.dll;MahApps.Metro.dll;Microsoft.Extensions.Configuration.Abstractions.dll;Microsoft.Extensions.Configuration.Binder.dll;Microsoft.Extensions.Configuration.dll;Microsoft.Extensions.DependencyInjection.Abstractions.dll;Microsoft.Extensions.DependencyInjection.dll;Microsoft.Extensions.Logging.Abstractions.dll;Microsoft.Extensions.Logging.dll;Microsoft.Extensions.Options.dll;Microsoft.Extensions.Primitives.dll;Microsoft.Plugin.Shell.deps.json;Microsoft.Plugin.Shell.dll;Microsoft.PowerToys.Settings.UI.Lib.dll;Microsoft.Xaml.Behaviors.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;Mono.Cecil.Pdb.dll;Mono.Cecil.Rocks.dll;Newtonsoft.Json.dll;NLog.dll;NLog.Extensions.Logging.dll;Pinyin4Net.dll;plugin.json;PowerToysInterop.dll;System.Text.Json.dll;Telemetry.dll;Wox.Infrastructure.dll;Wox.Plugin.dll?>
           <File Id="Shell_$(var.File)" Source="$(var.BinX64Dir)modules\launcher\Plugins\Microsoft.Plugin.Shell\$(var.File)" />
         <?endforeach?>
       </Component>
@@ -934,7 +934,7 @@
 
       <!-- Indexer Plugin -->
       <Component Id="IndexerComponent" Directory="IndexerPluginFolder" Guid="FEA9816A-B4F7-42CC-99AF-B05F3E7F7EBF">
-        <?foreach File in Microsoft.Plugin.Indexer.deps.json;Microsoft.Plugin.Indexer.dll;plugin.json;Wox.Infrastructure.dll;Telemetry.dll?>
+        <?foreach File in ControlzEx.dll;JetBrains.Annotations.dll;MahApps.Metro.dll;Microsoft.Extensions.Configuration.Abstractions.dll;Microsoft.Extensions.Configuration.Binder.dll;Microsoft.Extensions.Configuration.dll;Microsoft.Extensions.DependencyInjection.Abstractions.dll;Microsoft.Extensions.DependencyInjection.dll;Microsoft.Extensions.Logging.Abstractions.dll;Microsoft.Extensions.Logging.dll;Microsoft.Extensions.Options.dll;Microsoft.Extensions.Primitives.dll;Microsoft.Plugin.Indexer.deps.json;Microsoft.Plugin.Indexer.dll;Microsoft.PowerToys.Settings.UI.Lib.dll;Microsoft.Search.Interop.dll;Microsoft.Xaml.Behaviors.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;Mono.Cecil.Pdb.dll;Mono.Cecil.Rocks.dll;Newtonsoft.Json.dll;NLog.dll;NLog.Extensions.Logging.dll;Pinyin4Net.dll;plugin.json;PowerToysInterop.dll;System.Data.OleDb.dll;System.Text.Json.dll;Telemetry.dll;Wox.Infrastructure.dll;Wox.Plugin.dll?>
           <File Id="Indexer_$(var.File)" Source="$(var.BinX64Dir)modules\launcher\Plugins\Microsoft.Plugin.Indexer\$(var.File)" />
         <?endforeach?>
       </Component>
@@ -951,7 +951,7 @@
 
       <!-- Uri Plugin -->
       <Component Id="UriComponent" Directory="UriPluginFolder" Guid="C7DC8F88-554C-4375-9510-9435399B5D3D">
-        <?foreach File in plugin.json;Wox.Infrastructure.dll;Wox.Plugin.dll;Microsoft.Plugin.Uri.deps.json;Microsoft.Plugin.Uri.dll;Telemetry.dll?>
+        <?foreach File in ControlzEx.dll;JetBrains.Annotations.dll;MahApps.Metro.dll;Microsoft.Extensions.Configuration.Abstractions.dll;Microsoft.Extensions.Configuration.Binder.dll;Microsoft.Extensions.Configuration.dll;Microsoft.Extensions.DependencyInjection.Abstractions.dll;Microsoft.Extensions.DependencyInjection.dll;Microsoft.Extensions.Logging.Abstractions.dll;Microsoft.Extensions.Logging.dll;Microsoft.Extensions.Options.dll;Microsoft.Extensions.Primitives.dll;Microsoft.Plugin.Uri.deps.json;Microsoft.Plugin.Uri.dll;Microsoft.PowerToys.Settings.UI.Lib.dll;Microsoft.Xaml.Behaviors.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;Mono.Cecil.Pdb.dll;Mono.Cecil.Rocks.dll;Newtonsoft.Json.dll;NLog.dll;NLog.Extensions.Logging.dll;Pinyin4Net.dll;plugin.json;PowerToysInterop.dll;System.Text.Json.dll;Telemetry.dll;Wox.Infrastructure.dll;Wox.Plugin.dll?>
           <File Id="Uri_$(var.File)" Source="$(var.BinX64Dir)modules\launcher\Plugins\Microsoft.Plugin.Uri\$(var.File)" />
         <?endforeach?>
       </Component>
@@ -967,7 +967,7 @@
 
       <!-- WindowWalker Plugin -->  
       <Component Id="WindowWalkerComponent" Directory="WindowWalkerPluginFolder" Guid="EB1391C9-B701-421F-80FC-ABB2FEDFAD19">
-        <?foreach File in plugin.json;Wox.Infrastructure.dll;Wox.Plugin.dll;Microsoft.Plugin.WindowWalker.deps.json;Microsoft.Plugin.WindowWalker.dll;Telemetry.dll?>
+        <?foreach File in ControlzEx.dll;JetBrains.Annotations.dll;MahApps.Metro.dll;Microsoft.Extensions.Configuration.Abstractions.dll;Microsoft.Extensions.Configuration.Binder.dll;Microsoft.Extensions.Configuration.dll;Microsoft.Extensions.DependencyInjection.Abstractions.dll;Microsoft.Extensions.DependencyInjection.dll;Microsoft.Extensions.Logging.Abstractions.dll;Microsoft.Extensions.Logging.dll;Microsoft.Extensions.Options.dll;Microsoft.Extensions.Primitives.dll;Microsoft.Plugin.WindowWalker.deps.json;Microsoft.Plugin.WindowWalker.dll;Microsoft.PowerToys.Settings.UI.Lib.dll;Microsoft.Xaml.Behaviors.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;Mono.Cecil.Pdb.dll;Mono.Cecil.Rocks.dll;Newtonsoft.Json.dll;NLog.dll;NLog.Extensions.Logging.dll;Pinyin4Net.dll;plugin.json;PowerToysInterop.dll;System.Text.Json.dll;Telemetry.dll;Wox.Infrastructure.dll;Wox.Plugin.dll?>
           <File Id="WindowWalker_$(var.File)" Source="$(var.BinX64Dir)modules\launcher\Plugins\Microsoft.Plugin.WindowWalker\$(var.File)" />
         <?endforeach?>
       </Component>
